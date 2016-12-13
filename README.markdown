@@ -19,13 +19,13 @@ This is a work in progress. More algorithms will be added soon. :-)
 
 :heart_eyes: **Suggestions and contributions are welcome!** :heart_eyes:
 -->
-在這裡你將找到一些普及的演算法和資料結構在 Swift 上的實作，附帶詳細的解釋。
+在這裡你將找到一些普及的演算法和資料結構在 Swift 上的實作，附帶詳細的解釋.
 
 如果你是需要這些知識來準備考試的學生 -- 或者 你是個想要自我學習的程式設計人員 -- 那你來對地方了!
 
-這個專案的目的是 **解釋演算法是如何運作**。重點放在程式碼的清晰和可讀性，並非製作可重複使用的函式庫能讓你直接放到你的專案中。就算這樣說，大部分的程式碼應該都可以正式使用，但是你可能要調整一下。
+這個專案的目的是 **解釋演算法是如何運作**.重點放在程式碼的清晰和可讀性，並非製作可重複使用的函式庫能讓你直接放到你的專案中.就算這樣說，大部分的程式碼應該都可以正式使用，但是你可能要調整一下.
 
-所有的程式碼皆可以在 **Xcode 7.3** 和 **Swift 2.2** 上執行。我們將依據最新的 Swift 版本做更新。
+所有的程式碼皆可以在 **Xcode 7.3** 和 **Swift 2.2** 上執行.我們將依據最新的 Swift 版本做更新.
 
 這是個正在進行的專案，近期將會新增更多演算法. :-)
 
@@ -127,10 +127,10 @@ If you're new to algorithms and data structures, here are a few good ones to sta
 ### 字串搜尋
 
 - [Brute-Force 字串搜尋](Brute-Force String Search/). 一個簡單暴力的方法.
-- [Boyer-Moore](Boyer-Moore/). 一個快速搜尋子字串的方法. 為了避免走訪每個字元，根據查表來跳過某些的部分。 
+- [Boyer-Moore](Boyer-Moore/). 一個快速搜尋子字串的方法. 為了避免走訪每個字元，根據查表來跳過某些的部分. 
 - Knuth-Morris-Pratt
 - Rabin-Karp
-- [*最長共同子字串](Longest Common Subsequence/). 找到兩個字串中相同部分最長的子字串。
+- [*最長共同子字串](Longest Common Subsequence/). 找到兩個字串中相同部分最長的子字串.
 
 <!--
 ### Sorting
@@ -141,7 +141,7 @@ It's fun to see how sorting algorithms work, but in practice you'll almost never
 
 ### 排序
 
-研究排序演算法的原理是非常有趣的，但是在實做中，你幾乎不會需要去碰到這部分。Swift 自帶的 `sort()` 就已經很夠用了，但是如果你有興趣，請繼續閱讀...
+研究排序演算法的原理是非常有趣的，但是在實做中，你幾乎不會需要去碰到這部分.Swift 自帶的 `sort()` 就已經很夠用了，但是如果你有興趣，請繼續閱讀...
 
 <!--
 Basic sorts:
@@ -204,7 +204,7 @@ Bad sorting algorithms (don't use these!):
 
 ### 壓縮
 
-- [運行長度編碼 (RLE)](Run-Length Encoding/). 將重複的值儲存為一個 byte 並計數。
+- [運行長度編碼 (RLE)](Run-Length Encoding/). 將重複的值儲存為一個 byte 並計數.
 - [Huffman 編碼](Huffman Coding/). 將常出現的值用較小的值來儲存.
 
 <!--
@@ -216,7 +216,7 @@ Bad sorting algorithms (don't use these!):
 
 ### 雜項
 
-- [*洗牌](Shuffle/). 隨機重排陣列中的元素。
+- [*洗牌](Shuffle/). 隨機重排陣列中的元素.
 - [*梳排序](Comb Sort/). 氣泡排序法進化.
 
 
@@ -254,7 +254,7 @@ Bad sorting algorithms (don't use these!):
 
 ### 機器學習
 
-- [k-Means 叢集](K-Means/). 非監督式分類，將數據分成 *k* 群集。
+- [k-Means 叢集](K-Means/). 非監督式分類，將數據分成 *k* 群集.
 - k-Nearest 鄰近
 - [線性迴歸](Linear Regression/)
 - 邏輯迴歸
@@ -275,14 +275,14 @@ Most of the time using just the built-in `Array`, `Dictionary`, and `Set` types 
 
 ## 資料結構
 
-對於資料結構和特定任務的選擇依據幾件事情。
+對於資料結構和特定任務的選擇依據幾件事情.
 
-首先，你的資料是具有某種形態，並且有一些必要的操作方法。
-如果你想要依照某個 key 值去找到物件，那你需要 字典 類型的結構; 如果你的資料有分層特徵，你那會想要類似樹狀結構; 如果你的資料是序列，那你需要 堆疊 或 佇列 結構。
+首先，你的資料是具有某種形態，並且有一些必要的操作方法.
+如果你想要依照某個 key 值去找到物件，那你需要 字典 類型的結構; 如果你的資料有分層特徵，你那會想要類似樹狀結構; 如果你的資料是序列，那你需要 堆疊 或 佇列 結構.
 
-第二，你的資料需要一些特別的操作，不同的結構對於優化的操作都不盡相同。舉例來說，如果你常需要獲得集合中最重要的元素，那使用 堆積 或 優先佇列 就會比單純的陣列還要好。
+第二，你的資料需要一些特別的操作，不同的結構對於優化的操作都不盡相同.舉例來說，如果你常需要獲得集合中最重要的元素，那使用 堆積 或 優先佇列 就會比單純的陣列還要好.
 
-大多數情況下，內建的 `Array`、`Dictionary` 和 `Set` 已經足夠，但有時候你會需要更特殊的結構。
+大多數情況下，內建的 `Array`、`Dictionary` 和 `Set` 已經足夠，但有時候你會需要更特殊的結構.
 
 <!--
 ### Variations on arrays
@@ -295,9 +295,9 @@ Most of the time using just the built-in `Array`, `Dictionary`, and `Set` types 
 
 ### 陣列的變化
 
-- [二維陣列](Array2D/). 固定大小的二維陣列，可用於棋盤遊戲中。
-- [位元集](Bit Set/). 含有 *n* 個位元的序列。
-- [固定長度陣列](Fixed Size Array/). 如果可以確定資料量大小，那使用傳統的固定長度陣列會具有更高的效能。
+- [二維陣列](Array2D/). 固定大小的二維陣列，可用於棋盤遊戲中.
+- [位元集](Bit Set/). 含有 *n* 個位元的序列.
+- [固定長度陣列](Fixed Size Array/). 如果可以確定資料量大小，那使用傳統的固定長度陣列會具有更高的效能.
 - [有序陣列](Ordered Array/). 一個已經排序過的陣列.
 
 <!--
@@ -312,11 +312,11 @@ Most of the time using just the built-in `Array`, `Dictionary`, and `Set` types 
 
 ### 佇列
 
-- [堆疊](Stack/). 後進先出。
-- [佇列](Queue/). 先進先出。
-- [雙端佇列](Deque/). 可選擇在陣列的前端或尾端新增或取得元素。
-- [優先佇列](Priority Queue). 最重要的元素永遠在最前端。
-- [環狀緩衝](Ring Buffer/). 一個頭尾相接的陣列。
+- [堆疊](Stack/). 後進先出.
+- [佇列](Queue/). 先進先出.
+- [雙端佇列](Deque/). 可選擇在陣列的前端或尾端新增或取得元素.
+- [優先佇列](Priority Queue). 最重要的元素永遠在最前端.
+- [環狀緩衝](Ring Buffer/). 一個頭尾相接的陣列.
 
 <!--
 ### Lists
@@ -327,7 +327,7 @@ Most of the time using just the built-in `Array`, `Dictionary`, and `Set` types 
 
 ### 列表
 
-- [鏈結列表](Linked List/). 內容元素以鏈結來銜接的序列，包含單向及雙向。
+- [鏈結列表](Linked List/). 內容元素以鏈結來銜接的序列，包含單向及雙向.
 - 跳躍列表
 
 <!--
@@ -349,18 +349,18 @@ Most of the time using just the built-in `Array`, `Dictionary`, and `Set` types 
 
 ### 樹
 
-- [樹](Tree/). 一般性的樹狀結構。
-- [二元樹](Binary Tree/). 每個節點最多只有兩個子節點的樹。
-- [二元搜尋樹 (BST)](Binary Search Tree/). 節點經過排序的二元樹，優化了搜尋速度。
+- [樹](Tree/). 一般性的樹狀結構.
+- [二元樹](Binary Tree/). 每個節點最多只有兩個子節點的樹.
+- [二元搜尋樹 (BST)](Binary Search Tree/). 節點經過排序的二元樹，優化了搜尋速度.
 - 紅黑樹
 - 展開樹
 - 螺旋二元樹
-- [分割樹](Segment Tree/). 可以快速的對陣列中的某區間進行計算。
+- [分割樹](Segment Tree/). 可以快速的對陣列中的某區間進行計算.
 - kd 樹
-- [堆積](Heap/). 儲存在一維陣列中的二元樹，不需要指標，很適合做優先佇列。
+- [堆積](Heap/). 儲存在一維陣列中的二元樹，不需要指標，很適合做優先佇列.
 - 費波那契堆積
 - 字典樹
-- [B 樹](B-Tree/). 自平衡搜尋樹，每個節點可以擁有超過兩個子節點。
+- [B 樹](B-Tree/). 自平衡搜尋樹，每個節點可以擁有超過兩個子節點.
 
 <!--
 ### Hashing
@@ -371,7 +371,7 @@ Most of the time using just the built-in `Array`, `Dictionary`, and `Set` types 
 
 ### 雜湊
 
-- [雜湊表](Hash Table/). 可以使用 key 值來儲存或取得物件，字典通常是使用雜湊表實現的。
+- [雜湊表](Hash Table/). 可以使用 key 值來儲存或取得物件，字典通常是使用雜湊表實現的.
 - 雜湊函數
 
 
@@ -386,10 +386,10 @@ Most of the time using just the built-in `Array`, `Dictionary`, and `Set` types 
 
 ### 集合
 
-- [布隆過濾器](Bloom Filter/).可以用於檢索一個元素是否在一個集合中。它的優點是空間效率和查詢時間都遠遠超過一般的演算法，缺點是有一定的誤識別率和刪除困難。
-- [雜湊集合](Hash Set/). 使用雜湊表實做。
+- [布隆過濾器](Bloom Filter/).可以用於檢索一個元素是否在一個集合中.它的優點是空間效率和查詢時間都遠遠超過一般的演算法，缺點是有一定的誤識別率和刪除困難.
+- [雜湊集合](Hash Set/). 使用雜湊表實做.
 - 多重集合
-- [有序集合](Ordered Set/). 元素有順序的集合。
+- [有序集合](Ordered Set/). 元素有順序的集合.
 
 <!--
 ### Graphs
@@ -427,7 +427,7 @@ A lot of software developer interview questions consist of algorithmic puzzles. 
 
 ## 動腦時間
 
-許多軟體開發者在面試時都會被問到一些演算法的問題，這裡只收集了一些有趣的題目，想瞭解更多這類的問題 (及答案)，請瀏覽 [這裡](http://elementsofprogramminginterviews.com/) 和 [這裡](http://www.crackingthecodinginterview.com)。
+許多軟體開發者在面試時都會被問到一些演算法的問題，這裡只收集了一些有趣的題目，想瞭解更多這類的問題 (及答案)，請瀏覽 [這裡](http://elementsofprogramminginterviews.com/) 和 [這裡](http://www.crackingthecodinginterview.com).
 
 - [雙和問題](Two-Sum Problem/)
 - [Fizz Buzz](Fizz Buzz/)
@@ -497,11 +497,11 @@ It is now maintained by [Chris Pilcher](https://github.com/chris-pilcher) and [K
 The Swift Algorithm Club is a collaborative effort from the [most algorithmic members](https://github.com/rwenderlich/swift-algorithm-club/graphs/contributors) of the [raywenderlich.com](https://www.raywenderlich.com) community. We're always looking for help - why not [join the club](How to Contribute.markdown)? :]
 -->
 
-Swift 演算法社團是由 [Matthijs Hollemans](https://github.com/hollance) 所創立。
+Swift 演算法社團是由 [Matthijs Hollemans](https://github.com/hollance) 所創立.
 
-現在由 [Chris Pilcher](https://github.com/chris-pilcher) 和 [Kelvin Lau](https://github.com/kelvinlauKL) 維護。
+現在由 [Chris Pilcher](https://github.com/chris-pilcher) 和 [Kelvin Lau](https://github.com/kelvinlauKL) 維護.
 
-TSwift 演算法社團是由 [raywenderlich.com](https://www.raywenderlich.com) 的 [大部分的團員](https://github.com/rwenderlich/swift-algorithm-club/graphs/contributors) 協作而成。 我們一直歡迎任何幫助 - 為何不 [加入社團](How to Contribute.markdown)? :]
+Swift 演算法社團是由 [raywenderlich.com](https://www.raywenderlich.com) 的 [大部分的團員](https://github.com/rwenderlich/swift-algorithm-club/graphs/contributors) 協作而成. 我們一直歡迎任何幫助 - 為何不 [加入社團](How to Contribute.markdown)? :]
 
 <!--
 ## License
