@@ -1,5 +1,5 @@
-# Bit Set
-
+# Bit Set 位元集
+<!--
 A fixed-size sequence of *n* bits. Also known as bit array or bit vector.
 
 To store whether something is true or false you use a `Bool`. Every programmer knows that... But what if you need to remember whether 10,000 things are true or not?
@@ -7,10 +7,26 @@ To store whether something is true or false you use a `Bool`. Every programmer k
 You could make an array of 10,000 booleans but you can also go hardcore and use 10,000 bits instead. That's a lot more compact because 10,000 bits fit in less than 160 `Int`s on a 64-bit CPU.
 
 Since manipulating individual bits is a little tricky, you can use `BitSet` to hide the dirty work.
+-->
 
+一個固定長度為 *n* 的序列. 也叫做位元陣列或位元向量.
+
+大部分的程式設計者都知道要儲存像 真 或 假 的資料時, 會使用 `Bool` 這種資料型態. 但如果你需要儲存 10,000 個布林值呢?
+
+你可以創建一個含有 10,000 個布林值的陣列, 但你也可以單純使用 10,000 個位元. 這樣做會更省資源, 因為在 64-bit 的 CPU 上, 10,000 個位元比 160 個 ｀整數` 更小.
+
+不過要針對每個位元來操作需要點小技巧, 可以使用 `BitSet`(位元集) 來處理這件事.
+
+
+<!--
 ## The code
 
 A bit set is simply a wrapper around an array. The array doesn't store individual bits but larger integers called the "words". The main job of `BitSet` is to map the bits to the right word.
+-->
+
+## 程式碼
+
+位元集是一個陣列的容器, 這個趁列並不儲存每個單一位元, 而是儲存很大的整數, 叫做 "word". `BitSet` 的主要工作就是將位元對應到正確的 word.
 
 ```swift
 public struct BitSet {
@@ -30,21 +46,38 @@ public struct BitSet {
   }
 ```
 
+<!--
 `N` is the bit size of the words. It is 64 because we store the bits in a list of unsigned 64-bit integers. (It's fairly easy to change `BitSet` to use 32-bit words instead.)
 
 If you write,
+-->
+`N` 是 word 的位元數. 在此它會是 64 是因為我們將位元以 64 位元無號整數來儲存. (要把 `BitSet` 改成 32 位元來做也是非常容易)
+
+如果你撰寫,
 
 ```swift
 var bits = BitSet(size: 140)
 ```
 
+<!--
 then the `BitSet` allocates an array of three words. Each word has 64 bits and therefore three words can hold 192 bits. We only use 140 of those bits so we're wasting a bit of space (but of course we can never use less than a whole word).
 
 > **Note:** The first entry in the `words` array is the least-significant word, so these words are stored in little endian order in the array.
+-->
 
+那 `BitSet` 就會配置一個含有三個 word 的陣列, 每個 word 有 64 個位元, 所以三個 word 可以儲存 192 個位元. 我們只需要 140 個所以我們會浪費一點空間 ( 當然我們不會使用少於一個 word ).
+
+> **注意:** 最先進入 `words` 陣列的是最低有效 word, 所以這些 word 是以 little endian 的順序來儲存.
+
+<!--
 ## Looking up the bits
 
 Most of the operations on `BitSet` take the index of the bit as a parameter, so it's useful to have a way to find which word contains that bit.
+-->
+
+## 查找位元
+
+大部分 `BitSet` 的操作是以位元的索引來當參數, 所以如果有個方法可以知道是哪個 word 包含該位元是非常有用的.
 
 ```swift
   private func indexOf(_ i: Int) -> (Int, Word) {
@@ -56,6 +89,7 @@ Most of the operations on `BitSet` take the index of the bit as a parameter, so 
   }
 ```
 
+<!--
 The `indexOf()` function returns the array index of the word, as well as a "mask" that shows exactly where the bit sits inside that word.
 
 For example, `indexOf(2)` returns the tuple `(0, 4)` because bit 2 is in the first word (index 0). The mask is 4. In binary the mask looks like the following:
@@ -71,10 +105,33 @@ Another example: `indexOf(127)` returns the tuple `(1, 9223372036854775808)`. It
 	0000000000000000000000000000000000000000000000000000000000000001
 
 Note that the mask is always 64 bits because we look at the data one word at a time.
+-->
 
+`indexOf()` 函式回傳該 word 的索引, 就像 "遮罩" 一樣, 顯示該位元在該 word 中的哪一個位置.
+
+舉例來說, `indexOf(2)` 回傳 (0, 4), 因為位元 2 在第一個 word (索引值 0) 之中. 遮罩 4 是因為在二進位中表示像這樣:
+
+	0010000000000000000000000000000000000000000000000000000000000000
+
+那個 1 指出該位元在 word 中的位置.
+
+> **注意:** 這邊所有的表示是以 little endian 順序來呈現, 包含位元本身. 位元 0 在左側, 位元 63 在右側.
+
+另一個例子: `indexOf(127)` 回傳 `(1, 9223372036854775808)`. 這表示是第二個 word 最後一個位元. 遮罩是這樣:
+
+	0000000000000000000000000000000000000000000000000000000000000001
+
+提醒一下遮罩永遠是 64 位元的形式, 因為我們都在一個 word 中來看位元.
+
+<!--
 ## Setting and getting bits
 
 Now that we know where to find a bit, setting it to 1 is easy:
+-->
+
+## 設定與獲得位元
+
+現在我們知道如何到位元, 將他設定成 1 很簡單:
 
 ```swift
   public mutating func set(_ i: Int) {
@@ -83,9 +140,15 @@ Now that we know where to find a bit, setting it to 1 is easy:
   }
 ```
 
+<!--
 This looks up the word index and the mask, then performs a bitwise OR between that word and the mask. If the bit was 0 it becomes 1. If it was already set, then it remains set.
 
 Clearing the bit -- i.e. changing it to 0 -- is just as easy:
+-->
+
+先獲得該位元所在的 word 和 遮罩, 然後將該 word 和遮罩做 OR 的位元運算. 如果位元原本是 0, 就會變成 1. 如果原本就是 1, 那將保持 1.
+
+重置位元 -- 即將該位元設定成 0 -- 也很簡單:
 
 ```swift
   public mutating func clear(_ i: Int) {
@@ -93,10 +156,15 @@ Clearing the bit -- i.e. changing it to 0 -- is just as easy:
     words[j] &= ~m
   }
 ```
-
+<!--
 Instead of a bitwise OR we now do a bitwise AND with the inverse of the mask. So if the mask was `00100000...0`, then the inverse is `11011111...1`. All the bits are 1, except for the bit we want to set to 0. Due to the way `&` works, this leaves all other bits alone and only changes that single bit to 0.
 
 To see if a bit is set we also use the bitwise AND but without inverting:
+-->
+
+跟設定一樣, 只是這邊以 AND 位元運算來處理. 所以如果遮罩是 `0010000...0`, 則反向為 `11011111...1`. 除了該位元以外所有的位元皆是 1. 因為使用 `&` 運算, 所以可以保持其他位元的狀態, 並且只改變指定的位元.
+
+想知道某個位元是否為 1, 我們也可以使用 AND 位元運算但是不需要反向:
 
 ```swift
   public func isSet(_ i: Int) -> Bool {
@@ -104,8 +172,11 @@ To see if a bit is set we also use the bitwise AND but without inverting:
     return (words[j] & m) != 0
   }
 ```
-
+<!--
 We can add a subscript function to make this all very natural to express:
+-->
+
+我們可以增加一個 subscript 函式來讓表示上自然一點:
 
 ```swift
   public subscript(i: Int) -> Bool {
@@ -114,7 +185,11 @@ We can add a subscript function to make this all very natural to express:
   }
 ```
 
+<!--
 Now you can write things like:
+-->
+
+現在可以這樣來操作了:
 
 ```swift
 var bits = BitSet(size: 140)
@@ -124,7 +199,11 @@ bits[128] = true
 print(bits)
 ```
 
+<!--
 This will print the three words that the 140-bit `BitSet` uses to store everything:
+-->
+
+這裡會打印出這樣:
 
 ```swift
 0010000000000000000000000000000000000000000000000000000000000000
@@ -132,7 +211,11 @@ This will print the three words that the 140-bit `BitSet` uses to store everythi
 1000000000000000000000000000000000000000000000000000000000000000
 ```
 
+<!--
 Something else that's fun to do with bits is flipping them. This changes 0 into 1 and 1 into 0. Here's `flip()`:
+-->
+
+將位元翻過來挺好玩的. 就是 0 變 1, 1 變 0. 這裡示範 `flip()`:
 
 ```swift
   public mutating func flip(_ i: Int) -> Bool {
@@ -141,8 +224,11 @@ Something else that's fun to do with bits is flipping them. This changes 0 into 
     return (words[j] & m) != 0
   }
 ```
-
+<!--
 This uses the remaining bitwise operator, exclusive-OR, to do the flipping. The function also returns the new value of the bit.
+-->
+
+這裡用了 XOR 的位元操作, 這個函式會將該位元翻面, 並且回傳改變後的值.
 
 ## Ignoring the unused bits
 
