@@ -1,4 +1,4 @@
-# Array2D
+# Array2D (二維陣列)
 <!--
 In C and Objective-C you can write the following line,
 -->
