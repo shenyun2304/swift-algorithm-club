@@ -44,6 +44,7 @@ public struct BitSet {
     let n = (size + (N-1)) / N
     words = [Word](repeating: 0, count: n)
   }
+}
 ```
 
 <!--
@@ -230,9 +231,15 @@ This uses the remaining bitwise operator, exclusive-OR, to do the flipping. The 
 
 這裡用了 XOR 的位元操作, 這個函式會將該位元翻面, 並且回傳改變後的值.
 
+<!--
 ## Ignoring the unused bits
 
 A lot of the `BitSet` functions are quite easy to implement. For example, `clearAll()`, which resets all the bits to 0:
+-->
+
+## 清除無效的位元
+
+大部分 `BitSet` 的函式是很容易實作的. 舉例來說, `clearAll()` 將所有的位元設為 0:
 
 ```swift
   public mutating func clearAll() {
@@ -242,7 +249,11 @@ A lot of the `BitSet` functions are quite easy to implement. For example, `clear
   }
 ```
 
+<!--
 There is also `setAll()` to make all the bits 1. However, this has to deal with a subtle issue.
+-->
+
+也有個 `setAll()` 將所有位元設為 1. 不過呢, 這方法倒是有點問題.
 
 ```swift
   public mutating func setAll() {
@@ -253,7 +264,11 @@ There is also `setAll()` to make all the bits 1. However, this has to deal with 
   }
 ```
 
+<!--
 First, we copy ones into all the words in our array. The array is now:
+-->
+
+首先, 將所有的位元設為 1. 像這樣:
 
 ```swift
 1111111111111111111111111111111111111111111111111111111111111111
@@ -261,7 +276,11 @@ First, we copy ones into all the words in our array. The array is now:
 1111111111111111111111111111111111111111111111111111111111111111
 ```
 
+<!--
 But this is incorrect... Since we don't use most of the last word, we should leave those bits at 0:
+-->
+
+但這樣是做的... 因為有效的使用位元並沒有這麼多, 應該要把那幾個位元設程 0:
 
 ```swift
 1111111111111111111111111111111111111111111111111111111111111111
@@ -269,11 +288,19 @@ But this is incorrect... Since we don't use most of the last word, we should lea
 1111111111110000000000000000000000000000000000000000000000000000
 ```
 
+<!--
 Instead of 192 one-bits we now have only 140 one-bits. The fact that the last word may not be completely filled up means that we always have to treat this last word specially.
 
 Setting those "leftover" bits to 0 is what the `clearUnusedBits()` helper function does. If the `BitSet`'s size is not a multiple of `N` (i.e. 64), then we have to clear out the bits that we're not using. If we don't do this, bitwise operations between two differently sized `BitSet`s will go wrong (an example follows).
 
 This uses some advanced bit manipulation, so pay close attention:
+-->
+
+相較於 192 個 1 位元, 現在是 140 個 1 位元. 這種情況表示總是要對最後那幾個沒使用(無效)的位元做處理.
+
+`clearUnusedBits()` 是將那些 "剩餘" 的位元設為 0 的作用. 如果 `BitSet` 的大小不是 `N` (64) 的倍數, 那就需要去清除這些沒使用的位元. 如果不處理這件事. 對兩個不同大小的 `BitSet` 做位元運算時就會錯誤.
+
+這邊使用了一點進階的位元操作, 注意囉:
 
 ```swift
   private func lastWordMask() -> Word {
@@ -291,6 +318,7 @@ This uses some advanced bit manipulation, so pay close attention:
   }  
 ```
 
+<!--
 Here's what it does, step-by-step:
 
 1) `diff` is the number of "leftover" bits. In the above example that is 52 because `3*64 - 140 = 52`.
@@ -310,27 +338,64 @@ and add the high bit back in to get:
 There are now 12 one-bits in this word because `140 - 2*64 = 12`.
 
 4) Finally, turn all the higher bits off. Any leftover bits in the last word are now all 0.
+-->
 
+一步一步來看:
+
+1) `diff` 是 "剩餘" 位元的數量. 在上述的例子中是 52, 因為 `3*64 - 140 = 52`.
+
+2) 建立一個除了最高有效位元是 1 以外都是零的遮罩. 在例子中
+
+	0000000000010000000000000000000000000000000000000000000000000000
+	
+3) 將他減 1 就會變成:
+
+	1111111111100000000000000000000000000000000000000000000000000000
+	
+然後再將這兩個相加得到:
+
+	1111111111110000000000000000000000000000000000000000000000000000
+	
+這樣在這個 word 中就有 12 個 1 位元, 因為 `140 - 2*64 = 12`.
+
+4) 最後, 將最後一個 word 的剩餘位元設為 0.
+
+<!--
 An example of where this is important is when you combine two `BitSet`s of different sizes. For the sake of illustration, let's take the bitwise OR between two 8-bit values:
+-->
+
+這裡是組合兩個不同大小 `BitSet` 的例子. 來看看 OR 位元運算對於兩個 8 位元的值:
 
 	10001111  size=4
 	00100011  size=8
 
+<!--
 The first one only uses the first 4 bits; the second one uses 8 bits. The first one should really be `10000000` but let's pretend we forgot to clear out those 1's at the end. Then a bitwise OR between the two results in:
+-->
+
+第一個直應該只有前 4 個 位元有效; 第二個值 8 個位元都有效. 所以第一個直其實應該是 `10000000` 但是讓我們假裝忘記去清除無效位元. 所以這個運算會變成:
 
 	10001111  
 	00100011  
 	-------- OR
 	10101111
 
+<!--
 That is wrong since two of those 1-bits aren't supposed to be here. The correct way to do it is:
+-->
+
+當然, 這個直是錯誤的. 正確的解法是:
 
 	10000000       unused bits set to 0 first!
 	00100011  
 	-------- OR
 	10100011
 
+<!--
 Here's how the `|` operator is implemented:
+-->
+
+這裡是 `|` 運算子的實作:
 
 ```swift
 public func |(lhs: BitSet, rhs: BitSet) -> BitSet {
@@ -343,9 +408,16 @@ public func |(lhs: BitSet, rhs: BitSet) -> BitSet {
 }
 ```
 
+<!--
 Note that we `|` entire words together, not individual bits. That would be way too slow! We also need to do some extra work if the left-hand side and right-hand side have a different number of bits: we copy the largest of the two `BitSet`s into the `out` variable and then combine it with the words from the smaller `BitSet`.
 
 Example:
+-->
+
+注意到我們 `|` 整個 word, 不是只有針對個別的位元, 那樣太慢了! 我們也要特別處理如果兩邊的值有不同數量的位元: 先複製最大個那個 `BitSet` 到變數 `out`, 然後再將它跟相對小的 `Bitset` 做組合.
+
+例子:
+
 
 ```swift
 var a = BitSet(size: 4)
@@ -365,11 +437,20 @@ let c = a | b
 print(c)        // 1010001100000000...0
 ```
 
+<!--
 Bitwise AND (`&`), exclusive-OR (`^`), and inversion (`~`) are implemented in a similar manner.
+-->
 
+其他運算子如 AND (`&`), XOR (`^`) 和 INV(`~`) 皆可用類似方法實作.
+<!--
 ## Counting the number of 1-bits
 
 To count the number of bits that are set to 1 we could scan through the entire array -- an **O(n)** operation -- but there's a more clever method:
+-->
+
+## 1 位元的數量
+
+我們可以掃描整個陣列來計算 1 位元的數量 -- 一個 **O(n)** 操作 -- 但是有更聰明的方法:
 
 ```swift
   public var cardinality: Int {
@@ -384,38 +465,65 @@ To count the number of bits that are set to 1 we could scan through the entire a
     return count
   }
 ```
-
+<!--
 When you write `x & ~(x - 1)`, it gives you a new value with only a single bit set. This is the lowest bit that is one. For example take this 8-bit value (again, I'm showing this with the least significant bit on the left):
+-->
+
+當你執行 `x & ~(x - 1)`, 它回傳一個只有一個 1 個 1 位元的值. 其中的 1 位元, 就是最低 1 位元. 以一個 8 位元的值來說 (這裡一樣是用 little endian 來表示):
 
 	00101101
-
+<!--
 First we subtract 1 to get:
+-->
+首先我們減 1:
 
 	11001101
 
+<!--
 Then we invert it, flipping all the bits:
+-->
+
+然後我們反轉它:
 
 	00110010
 
+<!--
 And take the bitwise AND with the original value:
+-->
+
+然後把它跟原本的值做 AND 運算:
 
 	00101101
 	00110010
 	-------- AND
 	00100000
 
+<!--
 The only value they have in common is the lowest (or least significant) 1-bit. Then we erase that from the original value using exclusive-OR:
+-->
+
+最後的結果是只有最小 1 位元的值, 我們藉由 XOR 運算來將它設為 0.
 
 	00101101
 	00100000
 	-------- XOR
 	00001101
 
+<!--
 This is the original value but with the lowest 1-bit removed.
 
 We keep repeating this process until the value consists of all zeros. The time complexity is **O(s)** where **s** is the number of 1-bits.
+-->
 
+這就是原始值移除最小 1 位元後得結果.
+
+我們一直重複做以上動作直到整個值都為 0. 這個時間複雜度是 **n(s)**, **s** 是 1 位元的數量.
+
+<!--
 ## See also
+-->
+
+## 相關閱讀
 
 [Bit Twiddling Hacks](http://graphics.stanford.edu/~seander/bithacks.html)
 
