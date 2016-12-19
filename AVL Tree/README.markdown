@@ -1,4 +1,4 @@
-# AVL Tree
+# AVL Tree (AVL 樹)
 <!--
 An AVL tree is a self-balancing form of a [binary search tree](../Binary Search Tree/), in which the height of subtrees differ at most by only 1.
 
