@@ -1,48 +1,81 @@
-# Queue
+# Queue (佇列)
 
-A queue is a list where you can only insert new items at the back and remove items from the front. This ensures that the first item you enqueue is also the first item you dequeue. First come, first serve!
+佇列是一個只能在後端插入元素和在前端移除元素的列表. 這樣保證了最新放進列表的元素也會是最先離開列表的元素. 先來, 先處理!
 
-Why would you need this? Well, in many algorithms you want to add objects to a temporary list at some point and then pull them off this list again at a later time. Often the order in which you add and remove these objects matters.
+為什麼需要這東西? 在很多演算法中, 某些時候會需要新增物件到暫存的列表中, 然後在其他時間把他們取出來. 常常這個取的順序是有差別的.
 
-A queue gives you a FIFO or first-in, first-out order. The element you inserted first is also the first one to come out again. It's only fair! (A very similar data structure, the [stack](../Stack/), is LIFO or last-in first-out.)
+佇列提供 FIFO 或稱 先進先出 的順序. 最先插入的元素也會是最先拿出來的元素. (有一個非常相似的結構, [堆疊](../Stack), 提供了 LIFO 或稱 後進先出 的順序.)
 
+<!--
 For example, let's enqueue a number:
+-->
+
+舉例來說, 讓我們插入一個數字:
 
 ```swift
 queue.enqueue(10)
 ```
-
+<!--
 The queue is now `[ 10 ]`. Add the next number to the queue:
+-->
+
+佇列現在是 `[ 10 ]`. 再加一個數字到佇列中:
 
 ```swift
 queue.enqueue(3)
 ```
 
+<!--
 The queue is now `[ 10, 3 ]`. Add one more number:
+-->
+
+佇列現在是 `[ 10, 3 ]`. 在插入一個數字:
 
 ```swift
 queue.enqueue(57)
 ```
 
+<!--
 The queue is now `[ 10, 3, 57 ]`. Let's dequeue to pull the first element off the front of the queue:
+-->
+
+佇列現在是 `[ 10, 3, 57 ]`. 讓我們從佇列前端取出最先插入的元素:
 
 ```swift
 queue.dequeue()
 ```
 
+<!--
 This returns `10` because that was the first number we inserted. The queue is now `[ 3, 57 ]`. Everyone moved up by one place.
+-->
+
+這會回傳 `10`, 因為它是第一個插入佇列的元素. 而佇列現在是 `[ 3, 57 ]`. 所有元素都往前移動了一個位置.
 
 ```swift
 queue.dequeue()
 ```
 
+<!--
 This returns `3`, the next dequeue returns `57`, and so on. If the queue is empty, dequeuing returns `nil` or in some implementations it gives an error message.
 
 > **Note:** A queue is not always the best choice. If the order in which the items are added and removed from the list isn't important, you might as well use a [stack](../Stack/) instead of a queue. Stacks are simpler and faster.
+-->
 
+
+這次回傳 `3`, 下一次 dequeue 會回傳 `57`, 依此類推. 如果對一個空的佇列做 dequeue 的動作, 會回傳 `nil` 或有一些做法是會跳出錯誤訊息.
+
+> **注意:** 佇列並不總是最好的選擇. 如果插入和移除的元素順序並不重要. 那用 [堆疊](../Stack/) 可能會更好. 堆疊更簡單且快速.
+
+<!--
 ## The code
 
 Here is a very simplistic implementation of a queue in Swift. It's just a wrapper around an array that lets you enqueue, dequeue, and peek at the front-most item:
+-->
+
+## 程式碼
+
+這裡是一個 Swift 佇列簡單的實作. 只是包裝了一個陣列然後提供了插入, 取出 和 查看最前端元素 三個函式:
+
 
 ```swift
 public struct Queue<T> {
@@ -74,11 +107,22 @@ public struct Queue<T> {
 }
 ```
 
+<!--
 This queue works just fine but it is not optimal.
 
 Enqueuing is an **O(1)** operation because adding to the end of an array always takes the same amount of time, regardless of the size of the array. So that's great.
 
 You might be wondering why appending items to an array is **O(1)**, or a constant-time operation. That is so because an array in Swift always has some empty space at the end. If we do the following:
+-->
+
+這個佇列運作正常, 但是並非 Optional.
+
+插入是一個 **O(1)** 的操作, 因為在陣列尾端插入元素總是佔用一樣的時間, 無論陣列多大.
+
+你可能會對插入複雜度 **O(1)** 感到困惑. 那是因為在 Swift 中的陣列總是會在陣列後端保留一些空白的空間.
+
+如果我們這樣做:
+
 
 ```swift
 var queue = Queue<String>()
@@ -87,7 +131,12 @@ queue.enqueue("Steve")
 queue.enqueue("Tim")
 ```
 
+<!--
 then the array might actually look like this:
+-->
+
+
+
 
 	[ "Ada", "Steve", "Tim", xxx, xxx, xxx ]
 
