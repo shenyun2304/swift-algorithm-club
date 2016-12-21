@@ -1,5 +1,6 @@
-# Heap
+# Heap (堆積)
 
+<!--
 A heap is a [binary tree](../Binary Tree/) that lives inside an array, so it doesn't use parent/child pointers. The tree is partially sorted according to something called the "heap property" that determines the order of the nodes in the tree.
 
 Common uses for heap:
@@ -8,7 +9,18 @@ Common uses for heap:
 - The heap is the data structure supporting [heap sort](../Heap Sort/).
 - Heaps are fast for when you often need to compute the minimum (or maximum) element of a collection.
 - Impressing your non-programmer friends.
+-->
 
+堆積是個活在陣列中的 [二元樹](../Binary Tree/), 它並不使用父節點或子節點. 這棵樹依據某些名為"堆積屬性"的特性來排序.
+
+堆積的一般使用:
+
+- 建立 [優先佇列](../Priority Queue/).
+- 堆積是一個支援 [堆積排序](../Heap Sort/) 的資料結構.
+- 快速的計算集合中的最大或最小值.
+- 讓你的非程式員朋友印象深刻.
+
+<!--
 ## The heap property
 
 There are two kinds of heaps: a *max-heap* and a *min-heap*. They are identical, except that the order in which they store the tree nodes is opposite.
@@ -16,15 +28,33 @@ There are two kinds of heaps: a *max-heap* and a *min-heap*. They are identical,
 In a max-heap, parent nodes must always have a greater value than each of their children. For a min-heap it's the other way around: every parent node has a smaller value than its child nodes. This is called the "heap property" and it is true for every single node in the tree.
 
 An example:
+-->
+
+## 堆積屬性
+
+有兩種堆積: *最大堆積* 和 *最小堆積*. 它們除了儲存節點的順序以外都很相像.
+
+在最大堆積中, 父節點總是比他的任何一個子節點還要大, 而最小堆積則相反: 每個父節點會被他所有子節點還要小. 這個規則就是所謂的 "堆積屬性", 對於每個樹中的節點者屬性都有效.
+
+舉個例子:
 
 ![A max-heap](Images/Heap1.png)
 
+<!--
 This is a max-heap because every parent node is greater than its children. `(10)` is greater than `(7)` and `(2)`. `(7)` is greater than `(5)` and `(1)`.
 
 As a result of this heap property, a max-heap always stores its largest item at the root of the tree. For a min-heap, the root is always the smallest item in the tree. That is very useful because heaps are often used as a [priority queue](../Priority Queue/) where you want to quickly access the "most important" element.
 
 > **Note:** You can't really say anything else about the sort order of the heap. For example, in a max-heap the maximum element is always at index 0 but the minimum element isn’t necessarily the last one -- the only guarantee you have is that it is one of the leaf nodes, but not which one.
+-->
 
+這是一個最大堆積的例子, 因為每個父節點都比它的子節點還要大. `(10)` 大於 `(7)` 和 `(2)`. 而 `(7)` 大於 `(5)` 和 `(1)`.
+
+根據最大堆積屬性, 最大的元素一定在樹的根節點. 如果是最小堆積, 那根節點就會是最小的元素. 因為堆積通常拿來當 [優先佇列](../Priority Queue/), 用來快速獲得"最重要"的元素.
+
+> **注意:** 你無法真的知道堆積中元素的順序. 舉例來說, 在最大堆積中, 最大的元素一定在索引 0 的位置, 但是最小的元素不一定是在最後的位置 -- 你只能保證最小元素是在葉節點上, 但是也無法知道是哪個葉節點.
+
+<!--
 ## How does heap compare to regular trees?
 
 A heap isn't intended to be a replacement for a binary search tree. But there are many similarities between the two and also some differences. Here are some of the bigger differences:
@@ -36,28 +66,63 @@ A heap isn't intended to be a replacement for a binary search tree. But there ar
 **Balancing.** A binary search tree must be "balanced" so that most operations have **O(log n)** performance. You can either insert and delete your data in a random order or use something like an [AVL tree](../AVL Tree/) or [red-black tree](../Red-Black Tree/). But with heaps we don't actually need the entire tree to be sorted. We just want the heap property to be fulfilled, and so balancing isn't an issue. Because of the way the heap is structured, heaps can guarantee **O(log n)** performance.
 
 **Searching.** Searching a binary tree is really fast -- that's its whole purpose. In a heap, searching is slow. The purpose of a heap is to always put the largest (or smallest) node at the front, and to allow relatively fast inserts and deletes. Searching isn't a top priority.
+-->
 
+## 堆積跟一些樹狀結構比較?
+
+堆積並不是拿來取代二元搜尋樹的. 但是這兩個有很多相似處, 也有些差異. 以下是幾個主要的差異:
+
+**節點的順序** 在 [二元搜尋樹 (BST)](../Binary Search Tree/) 中, 左邊的子節點一定小於其父節點, 而右子節點一定大於其父節點. 在堆積中沒有這個限制. 在最大堆積中, 左右兩個子節點必小於其父節點; 而最小堆積中, 左右兩子節點必大於其父節點.
+
+**記憶體.** 傳統的樹狀結構佔用比他料本身更多的記憶體資源. 你需要配置父節點, 左右子節點的參考給每個節點. 堆積只需要單純的陣列而不需要參考.
+
+**平衡.** 一個二元搜尋樹在"平衡"的狀態下, 大部分的操作是 **O(log n)** 時間. 你可以隨機的插入或刪除資料或者使用 [AVL 樹](../AVL Tree/) 或 [紅黑樹](../Red-Black Tree/). 但是在堆積中, 我們並不是很需要整棵樹都是有序的. 我們只希望符合堆積屬性就好, 所以平衡並不是很重要. 所以堆積就出現啦, 堆積保證所有操作都是 **O(log n)**.
+
+
+**搜尋.** 在二元樹中搜尋是非常快的 -- 這就是二元樹的目的啊! 在堆積中, 搜尋是很慢的. 堆積的目的是保持最大 (或最小) 的元素在最前端, 然後提供相對快速的插入和刪除操作. 搜尋並不是堆積的想解決的目標.
+
+<!--
 ## The tree that lived in an array
 
 An array may seem like an odd way to implement a tree-like structure but it is very efficient in both time and space.
 
 This is how we're going to store the tree from the above example:
+-->
+## 活在陣列中的樹
+
+用陣列來實現樹狀結構是有點奇怪啦, 但這結構在時間和空間上非常有效率.
+
+這是我們拿上述例子來產生的陣列:
 
 	[ 10, 7, 2, 5, 1 ]
 
+
+<!--
 That's all there is to it! We don't need any more storage than just this simple array.
 
 So how do we know which nodes are the parents and which are the children if we're not allowed to use any pointers? Good question! There is a well-defined relationship between the array index of a tree node and the array indices of its parent and children.
 
 If `i` is the index of a node, then the following formulas give the array indices of its parent and child nodes:
+-->
+這就是全部! 我們不需要比一個單純的陣列更多的空間.
+
+所以我們如何在不使用任何節點參考的情況下知道哪些節點是父節點而哪些是子節點? 好問題! 在樹的節點和陣列的索引之間有個非常好的關係.
+
+如果 `i` 是節點的索引, 那以下的公式可以獲得該節點的父節點及子節點:
 
     parent(i) = floor((i - 1)/2)
     left(i)   = 2i + 1
     right(i)  = 2i + 2
     
+<!--
 Note that `right(i)` is simply `left(i) + 1`. The left and right nodes are always stored right next to each other.
 
 Let's use these formulas on the example. Fill in the array index and we should get the positions of the parent and child nodes in the array:
+-->
+注意到 `right(i)` 其實就是 `left(i) + 1`. 左子節點和右子節點總是緊連在一起.
+
+讓我們把公式套用到例子中. 把陣列的索引填滿我們應該可以得到父節點和子節點的位置:
+
 
 | Node | Array index (`i`) | Parent index | Left child | Right child |
 |------|-------------|--------------|------------|-------------|
@@ -67,52 +132,96 @@ Let's use these formulas on the example. Fill in the array index and we should g
 | 5 | 3 | 1 | 7 | 8 |
 | 1 | 4 | 1 | 9 | 10 |
 
+<!--
 Verify for yourself that these array indices indeed correspond to the picture of the tree.
 
 > **Note:** The root node `(10)` doesn't have a parent because `-1` is not a valid array index. Likewise, nodes `(2)`, `(5)`, and `(1)` don't have children because those indices are greater than the array size. So we always have to make sure the indices we calculate are actually valid before we use them.
 
 Recall that in a max-heap, the parent's value is always greater than (or equal to) the values of its children. This means the following must be true for all array indices `i`:
+-->
+
+自行驗證一下這些陣列的索引的確有對應到上面的樹狀圖.
+
+> **注意:** 根節點 `(10)` 沒有父節點, 因為 `-1` 不是個正確的陣列索引. 同樣的, `(2)`, `(5)` 和 `(1)` 沒有子節點, 因為它們的子節點索引都大於陣列的長度. 所以在使用這個公式後我們總是要去驗證算出來的索引是否為正確的.
+
+回想一下最大堆積, 父節點的值總是大於其所有子節點. 這表示以下這個判斷式對任何一個 `i` 一定是 `true`:
 
 ```swift
 array[parent(i)] >= array[i]
 ```
 	
+<!--
 Verify that this heap property holds for the array from the example heap.
 
 As you can see, these equations let us find the parent or child index for any node without the need for pointers. True, it's slightly more complicated than just dereferencing a pointer but that's the tradeoff: we save memory space but pay with extra computations. Fortunately, the computations are fast and only take **O(1)** time.
 
 It's important to understand this relationship between array index and position in the tree. Here's a slightly larger heap, this tree has 15 nodes divided over four levels:
+-->
+
+驗證一下最大堆積屬性在上例的堆積結構中成立.
+
+可以看到, 這些公式可以讓我們找到父節點和子節點, 而不需要參考指標.  這的確是只比使用指標複雜一點點 (需要計算), 而這樣做法我的得到: 節省了記憶體空間, 多一點計算. 幸運的是, 那些計算非常快速, 而只佔用 **O(1)** 時間.
+
+了解索引與節點位置的關係公式是很重要的. 這裡有個大一點的堆積, 有 15 個節點並共有 4 層:
 
 ![Large heap](Images/LargeHeap.png)
 
+<!--
 The numbers in this picture aren't the values of the nodes but the array indices that store the nodes! Those array indices correspond to the different levels of the tree like this:
+-->
+
+圖中節點內的數字表示該節點再轉換成陣列後的索引值, 不是節點本身的值. 這些索引對應層數就像這樣:
 
 ![The heap array](Images/Array.png)
 
+<!--
 For the formulas to work, parent nodes must always appear before child nodes in the array. You can see that in the above picture.
 
 Note that this scheme has limitations. You can do the following with a regular binary tree but not with a heap:
+-->
+
+為了讓公式正確轉換, 父節點一定要比子節在陣列中點更早出現. 在上面圖片可以看出這點.
 
 ![Impossible with a heap](Images/RegularTree.png)
 
+<!--
 You can’t start a new level unless the current lowest level is completely full. So heaps always have this kind of shape:
+-->
+
+如果低階層及還沒有填滿, 不能新建下一個層級. 所以推機的圖形都類似這樣:
 
 ![The shape of a heap](Images/HeapShape.png)
 
+<!--
 > **Note:** Technically speaking you *could* emulate a regular binary tree with a heap, but it would waste a lot of space and you’d need some way to mark array indices as being empty.
 
 Pop quiz! Let's say we have the array:
+-->
+> **注意:** 技術上你是 *可以* 用二元樹去模擬推機, 但是那樣就會浪費一堆空間, 而且還需要一些方法讓某些索引指向空值.
+
+來個小測試! 看看下面的陣列:
 
 	[ 10, 14, 25, 33, 81, 82, 99 ]
 	
+<!--
 Is this a valid heap? The answer is yes! A sorted array from low-to-high is a valid min-heap. We can draw this heap as follows:
+-->
+
+這是一個正確的堆積嗎? 答案是 是! 一個有序的遞增陣列是個最小堆積. 示意圖在此:
 
 ![A sorted array is a valid heap](Images/SortedArray.png)
 
+<!--
 The heap property holds for each node because a parent is always smaller than its children. (Verify for yourself that an array sorted from high-to-low is always a valid max-heap.)
 
 > **Note:** But not every min-heap is necessarily a sorted array! It only works one way... To turn a heap back into a sorted array, you need to use [heap sort](../Heap Sort/).
+-->
 
+因為每個節點都小於其子節點, 所以最小堆積的規則是成立的. (自行驗證看看是否遞減陣列總是最大堆積.)
+
+> **注意:** 並不是每個最小堆積都是有序陣列! 這只有單向邏輯... 如果要讓堆積轉換成有序陣列, 你需要用 [堆積排序](../Heap Sort/).
+
+<!--
 ## More math!
 
 In case you are curious, here are a few more formulas that describe certain properties of a heap. You don't need to know these by heart but they come in handy sometimes. Feel free to skip this section!
@@ -120,9 +229,19 @@ In case you are curious, here are a few more formulas that describe certain prop
 The *height* of a tree is defined as the number of steps it takes to go from the root node to the lowest leaf node. Or more formally: the height is the maximum number of edges between the nodes. A heap of height *h* has *h + 1* levels.
 
 This heap has height 3 and therefore has 4 levels:
+-->
+
+## 更多數學!
+
+如果你有興趣, 這裡有幾個表示某些堆積屬性的公式. 你不需要從頭到尾了解這些, 但是它們有時候挺好用的. 沒興趣跳過這節也沒關係.
+
+樹的 *高度* 定義是從根節點走到最末端葉節點的層數. 或更具體一點: 高度是兩個節點之間最大的邊數. 一個堆積的高度是 *h* 有 *h+1*  層.
+
+這個堆積高度是 *3* 所以有 4 層:
 
 ![Large heap](Images/LargeHeap.png)
 
+<!--
 A heap with *n* nodes has height *h = floor(log_2(n))*. This is because we always fill up the lowest level completely before we add a new level. The example has 15 nodes, so the height is `floor(log_2(15)) = floor(3.91) = 3`.
 
 If the lowest level is completely full, then that level contains *2^h* nodes. The rest of the tree above it contains *2^h - 1* nodes. Fill in the numbers from the example: the lowest level has 8 nodes, which indeed is `2^3 = 8`. The first three levels contain a total of 7 nodes, i.e. `2^3 - 1 = 8 - 1 = 7`.
@@ -134,6 +253,18 @@ There are at most *ceil(n/2^(h+1))* nodes of height *h* in an *n*-element heap.
 The leaf nodes are always located at array indices *floor(n/2)* to *n-1*. We will make use of this fact to quickly build up the heap from an array. Verify this for the example if you don't believe it. ;-)
 
 Just a few math facts to brighten your day.
+-->
+
+一個有 *n* 個節點的堆積高度是 *h = floor(log_2(n))*. 這是因為堆積總是先把低層的填滿才去增加新的層數. 這個例子有 15 個節點, 所以高度是 `floor(log_2(15)) = floor(3.91) = 3`.
+
+如果低階層都滿了, 則該階層含有 *2^h* 個節點. 而剩下的節點共有 *2^h - 1* 個. 讓我們把樹填滿: 最低層有 8 個節點, 的確是 `2^3 = 8`. 而其他層總共有 7 個節點, 即 `2^3 - 1 = 8 - 1 = 7`.
+
+而整棵樹的總節點數 *n* 是 *2^(h+1) - 1*. 在此例中, `2^4 -1 = 16 - 1 = 15`.
+
+在一個 *n* 個元素, 高度是 *h* 的堆積中最多有 *ceil(n/2^(h+1))* 個節點.
+
+葉節點總是落在 *floor(n/2)* 到 *n-1* 的索引之間. 我們可以利用這點來快速將一個陣列做成堆積. 如果不相信自己證明看看囉. ;-)
+
 
 ## What can you do with a heap?
 
