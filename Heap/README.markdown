@@ -265,7 +265,7 @@ Just a few math facts to brighten your day.
 
 葉節點總是落在 *floor(n/2)* 到 *n-1* 的索引之間. 我們可以利用這點來快速將一個陣列做成堆積. 如果不相信自己證明看看囉. ;-)
 
-
+<!--
 ## What can you do with a heap?
 
 There are two primitive operations necessary to make sure the heap is a valid max-heap or min-heap after you insert or remove an element:
@@ -298,6 +298,43 @@ The heap also has a `peek()` function that returns the maximum (max-heap) or min
 
 > **Note:** By far the most common things you'll do with a heap are inserting new values with `insert()` and removing the maximum or minimum value with `remove()`. Both take **O(log n)** time. The other operations exist to support more advanced usage, such as building a priority queue where the "importance" of items can change after they've been added to the queue.
 
+-->
+
+## 你可以拿堆積來做什麼?
+
+有兩個主要的操作, 可以確保堆積在插入或移除元素後還保持正確的最大堆積或者是最小堆積:
+
+- `shiftUp()`: 如果該元素比其父節點大 (最大堆積) 或小 (最小堆積), 那這個元素要跟其父節點交換位置. 使元素往上移.
+
+- `shiftDown()`: 如果該元素比其父節點小 (最大堆積) 或大 (最小堆積), 那這個元素要跟其父節點交換位置. 使元素往下移. 這個動作也稱為 "堆積化".
+
+上下移動是一個遞迴流程, 佔用 **O(log n)** 時間.
+
+其他的操作是以它們為基礎:
+
+- `insert(value)`: 在堆積的最尾端插入一個元素並使用 `shiftUp()` 來調整它.
+
+- `remove()`: 回傳並移除最大值 (最大堆積) 或 最小值 (最小堆積).  那要用哪個節點來替代被移除的節點呢? 我們先將最尾端的節點放到被移除節點的位置, 然後使用 `shiftDown()` 來調整堆積. (有時候這操作也稱為 "提取最小" 或 "提取最大".)
+
+- `removeAtIndex(index)`:  跟 `remove()` 很像但是讓你可以移除指定的位置, 不只是根節點. 這方法會同時呼叫 `shiftDown()` 和 `shiftUp()` 來調整堆積.
+
+- `replace(index, value)`: 覆寫一個節點值. 在最小堆積屬性中覆寫一個比該節點小的值或在最大堆積中覆寫比該節點大的值, 都會造成堆積屬性失效, 使用 `shiftUp()` 來調整. (此動作也被稱為 "減少鍵值" 或 "增加鍵值")
+
+上述的操作都佔用 **O(log n)** 時間, 因為上移或下移是最佔用資源的操作.
+
+還有一些佔更多時間的操作:
+
+- `search(value)`: 堆積對於搜尋不算有效率, 但是因為 `replace()` 和 `removeAtIndex()` 操作需要知道節點的索引, 所以有時候還是得去搜尋. 時間: **O(n)**.
+
+- `buildHeap(array)`: 要把一個未排序的陣列轉換成堆積需要一直重複的呼叫 `insert()`. 如果你更聰明, 這操作佔用 **O(n)** 時間.
+
+- [堆積排序](../Heap Sort/). 因為堆積其實上是個陣列, 我們可以使用它的唯一屬性來把陣列從低到高排序. 時間: **O(n lg n).**
+
+堆積同樣也有 `peek()` 函式用來回傳最大元素(最大堆積) 或 最小元素(最小堆積) 並不移除它們. 時間是 **O(1)**.
+
+> **注意:** 到目前為止會最常使用的是使用 `insert()` 來插入一個元素, 和用 `remove()` 來移除最大或最小的元素. 這兩個操作都是 **O(log n)** 時間. 其他的操作支援了更進階的使用, 像是建立一個優先佇列並且 "最重要的元素" 可以被改變就算該元素已經存在於佇列中.
+
+<!--
 ## Inserting into the heap
 
 Let's go through an example insertion to see in more detail how this works. We'll insert the value `16` into this heap:
@@ -331,7 +368,45 @@ Finally, we get:
 And now every parent is greater than its children again.
 
 The time required for shifting up is proportional to the height of the tree so it takes **O(log n)** time. (The time it takes to append the node to the end of the array is only **O(1)**, so that doesn't slow it down.)
+-->
 
+## 堆積的插入元素
+
+讓我們仔細來看看插入的動作流程是怎樣的. 如果我們要插入 `16` 到這個堆積:
+
+
+![The heap before insertion](Images/Heap1.png)
+
+這個堆積的陣列是: `[ 10, 7, 2, 5, 1 ]`.
+
+插入元素的第一步是插入到陣列的最尾端. 變成這樣:
+
+	[ 10, 7, 2, 5, 1, 16 ]
+
+對應的樹狀結構是這樣:
+
+![The heap before insertion](Images/Insert1.png)
+
+`(16)` 插入到最下層第一個空位.
+
+可惜的是, 堆積屬性失效了, 因為 `(2)` 在 `(16)` 的上方, 而我們希望大值在小值的上方. (這是一個最大堆積)
+
+為了保持堆積屬性, 我們將 `(16)` 和 `(2)` 互換.
+
+![The heap before insertion](Images/Insert2.png)
+
+我們還沒完成喔, 因為 `(10)` 還是比 `(16)` 小. 我們不斷的將新插入的元素和它的父節點交換直到比父節點還小或已經是根節點. 這個流程稱為 **上移** 或 **sifting**. 每次插入新元素都會執行這個流程. 可以讓太大或大小的值 "向上移動".
+
+最後, 我們得到:
+
+![The heap before insertion](Images/Insert3.png)
+
+現在每個父節點都比任何子節點還要大, 最大堆積的屬性再次成立.
+
+上移所需的時間是 **O(log n)**. (因為直接在最尾端插入元素, 所以插入元素的時間是 **O(1)**, 並不影響整體流程的時間.)
+
+
+<!--
 ## Removing the root
 
 Let's remove `(10)` from this tree:
@@ -357,7 +432,42 @@ Keep shifting down until the node doesn't have any children or it is larger than
 The time required for shifting all the way down is proportional to the height of the tree so it takes **O(log n)** time. 
 
 > **Note:** `shiftUp()` and `shiftDown()` can only fix one out-of-place element at a time. If there are multiple elements in the wrong place, you need to call these functions once for each of those elements.
+-->
 
+## 移除根節點
+
+這次讓我們來移除 `(10)` 看看:
+
+![The heap before removal](Images/Heap1.png)
+
+這時候最上方的空位怎麼辦?
+
+![The root is gone](Images/Remove1.png)
+
+當我們插入元素時, 我們把新的元素放到陣列的最尾端. 這次我們反過來做: 我們將最尾端的元素移動到根節點的位置, 然後重新復原堆積的屬性.
+
+![The last node goes to the root](Images/Remove2.png)
+
+讓我們來看看如何 **下移** `(1)`. 為了保持最大堆積的屬性, 我們希望最大的數值會在最上方位置. 我們有兩個交換的候選 `(7)` 和 `(2)`. 選擇比較大的值來當交換的對象, 那就是 `(7)`, 所以把 `(1)` 跟  `(7)` 交換會得到:
+
+
+![The last node goes to the root](Images/Remove3.png)
+
+持續的交換節點直到 `(1)` 沒有任何子節點或者大於任何子節點. 在例子中我們只需要在交換一次就可以重新使得最大堆積屬性成立.
+
+![The last node goes to the root](Images/Remove4.png)
+
+<!--
+The time required for shifting all the way down is proportional to the height of the tree so it takes **O(log n)** time. 
+
+> **Note:** `shiftUp()` and `shiftDown()` can only fix one out-of-place element at a time. If there are multiple elements in the wrong place, you need to call these functions once for each of those elements.
+-->
+
+從頭開始向下移動的時間是 **O(log n)**.
+
+> **注意:** `shiftUp()` 和 `shiftDown()` 每一次只能調整一個交換. 如果有很多個元素都在錯誤的地方. 你需要讓所有的元素都呼叫這些函式一次.
+
+<!--
 ## Removing any node
 
 The vast majority of the time you'll be removing the object at the root of the heap because that's what heaps are designed for.
@@ -383,7 +493,36 @@ However, shifting down is not the only situation we need to handle -- it may als
 ![We need to shift up](Images/Remove5.png)
 
 Now `(5)` gets swapped with `(8)`. Because `(8)` is larger than its parent, we need to call `shiftUp()`.
+-->
 
+## 刪除節點
+
+大部分時候你會刪除根節點, 因為這就是堆積的設計目的.
+
+但如果可以移除任意位置的元素, 那就更好啦. 我們需要一個更一般化的 `remove()`, 而這個方法可能會使用到 `shiftDown()` 或 `shiftUp()` 來調整堆積.
+
+讓我們回顧一下範例中的樹, 而這此我們要移除 `(7)`:
+
+![The heap before removal](Images/Heap1.png)
+
+目前的堆積陣列是:
+
+	[ 10, 7, 2, 5, 1 ]
+
+你知道的, 移除元素可能會造成堆積屬性失效. 為了解決這個問題, 我們將要移除的元素和最尾端的元素作交換.
+
+	[ 10, 1, 2, 5, 7 ]
+
+現在最後一個元素就是我們要移除的, 呼叫 `removeLast()` 可以得到該元素並且移除它. 可是現在 `(1)` 比它的子節點 `(5)` 還要小, 所以我呼叫 `shiftDown()` 來調整.
+
+無論如何, 往下移動並不是唯一的處理方式 -- 也是有可能需要的調整是向上移. 試試看如果要移除 `(5)` 會怎樣:
+
+![We need to shift up](Images/Remove5.png)
+
+
+這情況下 `(5)` 要跟 `(8)` 交換並移除. 但是 `(8)` 會比 `(7)` 還大, 所以需要 `shiftUp()`.
+
+<!--
 ## Creating a heap from an array
 
 It can be convenient to convert an array into a heap. This just shuffles the array elements around until the heap property is satisfied.
@@ -414,7 +553,40 @@ In code:
 ```
 
 Here, `elements` is the heap's own array. We walk backwards through this array, starting at the first non-leaf node, and call `shiftDown()`. This simple loop puts these nodes, as well as the leaves that we skipped, in the correct order. This is known as Floyd's algorithm and only takes **O(n)** time. Win!
+-->
 
+## 從陣列獲得堆積
+
+如果可以把陣列轉換成堆積了話, 那真方便. 要做的就是調整陣列元素的順序直到符合堆積屬性的條件.
+
+程式碼像這樣:
+
+```swift
+  private mutating func buildHeap(fromArray array: [T]) {
+    for value in array {
+      insert(value)
+    }
+  }
+```
+
+簡單的對陣列中每個元素呼叫 `insert()` 方法. 非常輕鬆, 但是效能不好. 這方法共使用 **O(n log n)** 時間, 因為有 **n** 個元素而每一個佔用 **log n** 時間.
+
+如果你有唸到"更多數學!"的部分, 那你已經知道陣列中索引介於 *n/2* 到 *n-1* 之間的都是葉節點, 我們可以直接跳過這些節點只處理其他的節點, 因為剩下來的都是父節點, 而可能在錯誤的位置.
+
+程式碼:
+
+```swift
+  private mutating func buildHeap(fromArray array: [T]) {
+    elements = array
+    for i in (elements.count/2 - 1).stride(through: 0, by: -1) {
+      shiftDown(index: i, heapSize: elements.count)
+    }
+  }
+```
+
+在這裡, `element` 是堆積本身的陣列. 我們從第一個非葉節點索引開始往回迭代, 然後對索引 `i` 呼叫 `shiftDown()`. 這個簡單的迴圈可以把元素放到正確的位置. 就正是所謂的 "Floyd 演算法", 而且只花 **O(n)** 時間. 贏了!
+
+<!--
 ## Searching the heap
 
 Heaps aren't made for fast searches, but if you want to remove an arbitrary element using `removeAtIndex()` or change the value of an element with `replace()`, then you need to obtain the index of that element somehow. Searching is one way to do this but it's kind of slow.
@@ -434,7 +606,29 @@ Let's say we want to see if the heap contains the value `8` (it doesn't). We sta
 Despite this small optimization, searching is still an **O(n)** operation.
 
 > **Note:** There is away to turn lookups into a **O(1)** operation by keeping an additional dictionary that maps node values to indices. This may be worth doing if you often need to call `replace()` to change the "priority" of objects in a [priority queue](../Priority Queue/) that's built on a heap.
+-->
 
+## 在堆積中搜尋
+
+堆積並不是為了快速搜尋而設計的, 但如果你想要使用 `removeAtIndex()` 移除某個特別的元素, 或使用 `replace()` 來取代某個元素, 那你就需要先拿到該元素的索引. 只有一個方法可以做搜尋不過挺慢的.
+
+在 [二元搜尋樹](../Binary Search Tree/) 中因為節點有序的特性可以保證快速搜尋. 但是堆積中的節點沒有這特性, 所以二元搜尋在這邊派不上用場. 你可能真的要一個一個元素去找.
+
+再次看看我們的例子:
+
+![The heap](Images/Heap1.png)
+
+如果想找 `(1)` 的索引, 可以對 `[ 10, 7, 2, 5, 1 ]` 做線性搜尋.
+
+雖然說堆積結構在設計時並沒有考慮搜尋, 但是我們還是有一點便宜可以占. 我們知道最大堆積的父節點永遠比子節點大, 所以如果當父節點已經比我們要搜尋的值還要小時, 那它的子節點也就不用走訪了.
+
+讓我們來搜尋 `8`. 我們從根節點 `(10)` 開始. 這很明顯不是我們要的, 所以開始往子節點走, 左子節點是 `7`. 這也不是我們要的, 但這時候的堆積屬性是最大堆積, 所以我們知道這條子樹往下走不會找到我們要的元素. 因為再往下走的節點都小於 `7`. 對於右節點的 `2` 也是一樣道理. 所以很快就知道 `8` 不在陣列中.
+
+儘管有這個小小的優化, 搜尋依然是 **O(n)** 的操作.
+
+> **注意:** 如果利用一個字典來儲存每個節點的值和索引, 的確是可以把搜尋變為 **O(1)** 時間. 如果你時常呼叫 `replace()` 去改變在[優先佇列](../Priority Queue/)中元素的 "優先順序", 那這個處理方式是值得的. 
+
+<!--
 ## The code
 
 See [Heap.swift](Heap.swift) for the implementation of these concepts in Swift. Most of the code is quite straightforward. The only tricky bits are in `shiftUp()` and `shiftDown()`.
@@ -444,21 +638,44 @@ You've seen that there are two types of heaps: a max-heap and a min-heap. The on
 Rather than create two different versions, `MaxHeap` and `MinHeap`, there is just one `Heap` object and it takes an `isOrderedBefore` closure. This closure contains the logic that determines the order of two values. You've probably seen this before because it's also how Swift's `sort()` works.
 
 To make a max-heap of integers, you write:
+-->
+
+## 程式碼
+
+可以從 [Heap.swift](Heap.swift) 看到這些概念在 Swift 上的實作. 大部分的程式都挺直觀的. 只有 `shiftUp()` 和 `shiftDown()` 需要一點技巧.
+
+你已經知道有兩種堆積屬性: 最大堆積和最小堆積. 這兩個屬性的差異在於節點的排列規則: 最大的在上還是最小的在上.
+
+相較於創造兩個堆積型態, `MaxHeap` 和 `MinHeap`, 檔案中只有一個 `Heap` 型態帶有 `isOrderedBefore` 閉包. 這個閉包決定了兩個元素的先後順序. 你可以已經早就看過了, 因為這就是 Swift 中 `sort()` 得做法.
+
+
+要製作一個整數的最大堆積, 你可以這樣撰寫:
+
 
 ```swift
 var maxHeap = Heap<Int>(sort: >)
 ```
 
+<!--
 And to create a min-heap you write:
+-->
+
+而製作一個整數的最小堆積, 你可以這樣撰寫:
 
 ```swift
 var minHeap = Heap<Int>(sort: <)
 ```
 
+<!--
 I just wanted to point this out, because where most heap implementations use the `<` and `>` operators to compare values, this one uses the `isOrderedBefore()` closure.
-
 ## See also
+-->
 
-[Heap on Wikipedia](https://en.wikipedia.org/wiki/Heap_%28data_structure%29)
+我會特別提這點, 因為大部分的堆積實作都使用 `<` 或 `>` 運算子來比較元素值, 而在這檔案中使用 `isOrderedBefore()` 閉包.
+
+## 相關閱讀
+
+
+[維基百科上的堆積](https://en.wikipedia.org/wiki/Heap_%28data_structure%29)
 
 *Written for the Swift Algorithm Club by [Kevin Randrup](http://www.github.com/kevinrandrup) and Matthijs Hollemans*
