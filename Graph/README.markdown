@@ -254,17 +254,27 @@ It stores arbitrary data with a generic type `T`, which is `Hashable` to enforce
 
 節點的 `值` 是泛型 `T`, `T` 強制要實作 `Hashable` 和 `Equatable` 來保證唯一性.
 
+<!--
 ## The code: graphs
 
 > **Note:** There are many, many ways to implement graphs. The code given here is just one possible implementation. You probably want to tailor the graph code to each individual problem you're trying to solve. For instance, your edges may not need a `weight` property, or you may not have the need to distinguish between directed and undirected edges.
 
 Here's an example of a very simple graph:
+-->
+
+## 程式碼: 圖
+
+> **注意:** 有非常多的方法可以實作圖. 這裡展示的程式碼只是其中之一的解法而已. 你可能需要針對你遇到的問題個別的設計出圖狀結構.  舉例來說, 你的邊並不一定需要 `權重` 屬性, 或者你的邊也不需要分有向或無向.
+
+這裡是一個非常簡單的圖結構:
 
 ![Demo](Images/Demo1.png)
 
-We can represent it as an adjacency matrix or adjacency list. The classes implementing those concept both inherit a common API from `AbstractGraph`, so they can be created in an identical fashion, with different optimized data structures behind the scenes.
+我們可以用鄰接矩陣或鄰接列表來表示它. 實作這些概念的類別是從 `AbstractGraph` 這個 API 中獲得的, 
+We can represent it as an adjacency matrix or adjacency list. The classes implementing those concept both inherit a common API from `AbstractGraph`, 因此可以以相同的方式創建, 並在幕後使用不同的資料結構去優化.
 
-Let's create some directed, weighted graphs, using each representation, to store the example:
+讓我們實作 `有向`, `加權` 的圖吧:
+
 
 ```swift
 for graph in [AdjacencyMatrixGraph<Int>(), AdjacencyListGraph<Int>()] {
@@ -284,7 +294,11 @@ for graph in [AdjacencyMatrixGraph<Int>(), AdjacencyListGraph<Int>()] {
 }
 ```
 
+<!--
 As mentioned earlier, to create an undirected edge you need to make two directed edges. If we wanted undirected graphs, we'd call this method instead, which takes care of that work for us:
+-->
+
+稍早提過, 要製作一個無向的邊, 需要使用兩個方向相反的單向邊來實作. 如果需要的是無向圖, 我們會使用這個方法:
 
 ```swift
   graph.addUndirectedEdge(v1, to: v2, withWeight: 1.0)
@@ -293,12 +307,22 @@ As mentioned earlier, to create an undirected edge you need to make two directed
   graph.addUndirectedEdge(v4, to: v1, withWeight: 2.8)
   graph.addUndirectedEdge(v2, to: v5, withWeight: 3.2)
 ```
-
+<!--
 We could provide `nil` as the values for the `withWeight` parameter in either case to make unweighted graphs.
+-->
 
+我們可以對 `withWeight` 參數傳入 `nil` 表示無權重.
+
+<!--
 ## The code: adjacency list
 
 To maintain the adjacency list, there is a class that maps a list of edges to a vertex. The graph simply maintains an array of such objects and modifies them as necessary.
+-->
+
+## 程式碼: 鄰接列表
+
+
+用一個 class 將邊的列表和節點儲存起來. 圖結構中很單純的用一個陣列儲存好幾個這種 class 的物件, 並根據需求修改它們.
 
 ```swift
 private class EdgeList<T> where T: Equatable, T: Hashable {
@@ -317,7 +341,11 @@ private class EdgeList<T> where T: Equatable, T: Hashable {
 }
 ```
 
+<!--
 They are implemented as a class as opposed to structs so we can modify them by reference, in place, like when adding an edge to a new vertex, where the source vertex already has an edge list:
+-->
+
+以 class 不用 struct 來做, 所以我們可以用參考來修改他們, 就像如果要對一個新的節點加入一個邊時, 此節點物件已經擁有邊的陣列在裡面.
 
 ```swift
 open override func createVertex(_ data: T) -> Vertex<T> {
@@ -337,7 +365,11 @@ open override func createVertex(_ data: T) -> Vertex<T> {
 }
 ```
 
+<!--
 The adjacency list for the example looks like this:
+-->
+
+範例中的鄰接陣列會像這樣:
 
 ```
 v1 -> [(v2: 1.0)]
@@ -346,13 +378,25 @@ v3 -> [(v4: 4.5)]
 v4 -> [(v1: 2.8)]
 ```
 
+<!--
 where the general form `a -> [(b: w), ...]` means an edge exists from `a` to `b` with weight `w` (with possibly more edges connecting `a` to other vertices as well).
+-->
 
+這個 `a -> [(b: w), ...]` 的格式表示有個邊是從 `a` 到 `b` 並且權重是 `w` (也可能有更多 `a` 連結的節點).
+
+<!--
 ## The code: adjacency matrix
 
 We'll keep track of the adjacency matrix in a two-dimensional `[[Double?]]` array. An entry of `nil` indicates no edge, while any other value indicates an edge of the given weight. If `adjacencyMatrix[i][j]` is not nil, then there is an edge from vertex `i` to vertex `j`.
 
 To index into the matrix using vertices, we use the `index` property in `Vertex`, which is assigned when creating the vertex through the graph object. When creating a new vertex, the graph must resize the matrix:
+-->
+
+## 程式碼: 鄰接矩陣
+
+我們使用二維陣列 `[[Double?]]` 來實作. 一個內容為 `nil` 的元素表示沒有邊連接, 如果有值則表示邊的權重. 如果 `adjacencyMatrix[i][j]` 不是 `nil`, 表示有個邊從 `i` 到 `j`.
+
+要將節點和矩陣的索引做連結, 使用 `Vertex` 中的 `index` 屬性, 這屬性會在創建節點物件時指派. 當加入一個新的節點時, 就需要重新調整矩陣的大小:
 
 ```swift
 open override func createVertex(_ data: T) -> Vertex<T> {
@@ -383,7 +427,11 @@ open override func createVertex(_ data: T) -> Vertex<T> {
 }
 ```
 
+<!--
 Then the adjacency matrix looks like this:
+-->
+
+然後鄰接矩陣就會像這樣:
 
 	[[nil, 1.0, nil, nil, nil]    v1
 	 [nil, nil, 1.0, nil, 3.2]    v2
@@ -393,9 +441,14 @@ Then the adjacency matrix looks like this:
 
 	  v1   v2   v3   v4   v5
 
-
+<!--
 ## See also
 
 This article described what a graph is and how you can implement the basic data structure. But we have many more articles on practical uses for graphs, so check those out too!
+-->
+
+## 相關閱讀
+
+這篇文章描述了什麼是圖狀結構和可以如何實作基本的資料結構. 我們還有更多關於圖狀結構的特殊應用, 也去看看吧!
 
 *Written by Donald Pinckney and Matthijs Hollemans*
