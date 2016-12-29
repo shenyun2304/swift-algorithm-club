@@ -75,4 +75,6 @@ The brute-force approach works OK, but it's not very efficient (or pretty). It s
 brute-force 表現還可以, 不過在效率上非常糟糕. 但是在短字串上應該還好. 有更聰明的演算法來處理更大的字串, 看看[Boyer-Moore 字串搜尋](../Boyer-Moore) 演算法
 
 
+
+
 *Written for Swift Algorithm Club by Matthijs Hollemans*
