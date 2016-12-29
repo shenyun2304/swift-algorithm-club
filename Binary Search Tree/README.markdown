@@ -649,13 +649,13 @@ To see how this works, take the following tree:
 ![Example](Images/MinimumMaximum.png)
 
 <!--
-For example, if we look at node `10`, its leftmost descendent is `6`. We get there by following all the `left` pointers until there are no more left children to look at. The leftmost descendent of the root node `7` is `1`. Therefore, `1` is the minimum value in the entire tree.
+For example, if we look at node `10`, its leftmost descendent is `7`. We get there by following all the `left` pointers until there are no more left children to look at. The leftmost descendent of the root node `6` is `1`. Therefore, `1` is the minimum value in the entire tree
 
 We won't need it for deleting, but for completeness' sake, here is the opposite of `minimum()`:
 
 -->
 
-舉例來說, 先針對節點 `10`, 它最左邊的葉節點是 `6`. 我們依照選擇左子節點的規則一直往下層走訪直到沒有任何節點. 根節點的最左邊葉節點是 `1`, 因此, 節點 `1` 是整棵樹值最小的節點. 
+舉例來說, 先針對節點 `10`, 它最左邊的葉節點是 `7`. 我們依照選擇左子節點的規則一直往下層走訪直到沒有任何節點. 根節點的最左邊葉節點是 `1`, 因此, 節點 `1` 是整棵樹值最小的節點. 
 
 這是獲得最右邊葉節點的函式 ( 最大子節點 ):
 
@@ -669,13 +669,14 @@ We won't need it for deleting, but for completeness' sake, here is the opposite 
   }
 ```
 
+
 <!--
-It returns the rightmost descendent of the node. We find it by following `right` pointers until we get to the end. In the above example, the rightmost descendent of node `2` is `5`. The maximum value in the entire tree is `11`, because that is the rightmost descendent of the root node `7`.
+It returns the rightmost descendent of the node. We find it by following `right` pointers until we get to the end. In the above example, the rightmost descendent of node `2` is `5`. The maximum value in the entire tree is `11`, because that is the rightmost descendent of the root node `6`.
 
 Finally, we can write the code that removes a node from the tree:
 -->
 
-依照選擇右子節點的規則一直往下層走訪直到最後. 由此例子來看, 節點 `2` 的最右邊子節點是 `5`. 整棵樹的最大節點是 `11`, 因為該節點是根節點 `7` 最右邊的子節點.
+依照選擇右子節點的規則一直往下層走訪直到最後. 由此例子來看, 節點 `2` 的最右邊子節點是 `5`. 整棵樹的最大節點是 `11`, 因為該節點是根節點 `6` 最右邊的子節點.
 
 最後, 我們可以得到刪除節點的程式碼:
 
@@ -779,7 +780,7 @@ First you find the node that you want to remove with `search()` and then you cal
 
 先用 `search()` 找到你想要刪除的節點, 然後呼叫 `remove()`, 在刪除之前, 印出來的樹長這樣:
 
-	((1) <- 2 -> (5)) <- 7 -> ((9) <- 10)
+	((1) <- 2 -> (5)) <- 6 -> ((9) <- 10)
 
 <!--
 But after `remove()` you get:
@@ -787,7 +788,7 @@ But after `remove()` you get:
 
 刪除後, 樹變成這樣:
 
-	((1) <- 5) <- 7 -> ((9) <- 10)
+	((1) <- 5) <- 6 -> ((9) <- 10)
 
 <!--
 As you can see, node `5` has taken the place of `2`.

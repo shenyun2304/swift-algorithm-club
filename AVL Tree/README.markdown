@@ -91,21 +91,69 @@ If after an insertion or deletion the balance factor becomes greater than 1, the
 
 <!--
 ## Rotations
-
 Each tree node keeps track of its current balance factor in a variable. After inserting a new node, we need to update the balance factor of its parent node. If that balance factor becomes greater than 1, we "rotate" part of that tree to restore the balance.
-
-TODO: describe with pictures how these rotations work
-
-Insertion never needs more than 2 rotations. Removal might require up to *log(n)* rotations.
 -->
-
 ## 輪轉
 
 每一個節點將自己的平衡因子儲存在一個變數中, 每當新增一個節點, 我們需要更新該節點的父節點的平衡因子. 如果該父節點的平衡因子大於 1, 則我們需要 "輪轉" 某些部分去維持整個平衡.
 
-TODO: 需要圖片來解釋輪轉動作原理
+![Rotation0](Images/RotationStep0.jpg)
 
-新增從來不需要超過 2 次輪轉. 移除可能需要 *log(n)* 次輪轉.
+<!--
+For the rotation we're using the terminology:
+* *Root* - the parent not of the subtrees that will be rotated;
+* *Pivot* - the node that will become parent (basically will be on the *Root*'s position) after rotation;
+* *RotationSubtree* - subtree of the *Pivot* upon the side of rotation
+* *OppositeSubtree* - subtree of the *Pivot* opposite the side of rotation
+
+Let take an example of balancing the unbalanced tree using *Right* (clockwise direction) rotation: 
+-->
+對於輪轉我們使用以下這些術語:
+
+* *Root* - 輪轉前, 要輪轉節點的父節點.
+* *Pivot* - 要輪轉的節點, 輪轉後變成父節點的節點 (基本上就是變成 *Root* 的位置).
+* *RotationSubtree* - 向右輪轉了話, 就是左子樹; 向左輪轉了話, 就是右子樹.
+* *OppositeSubtree* - 向右輪轉了話, 就是右子樹; 向左輪轉了話, 就是左子樹.
+
+![Rotation1](Images/RotationStep1.jpg) ![Rotation2](Images/RotationStep2.jpg) ![Rotation3](Images/RotationStep3.jpg)
+
+<!--
+The steps of rotation could be described by following:  
+
+1. Assign the *RotationSubtree* as a new *OppositeSubtree* for the *Root*;
+2. Assign the *Root* as a new *RotationSubtree* for the *Pivot*;
+3. Check the final result
+-->
+
+輪轉步驟:
+
+1. 將 *RotationSubtree* 變成 *Root* 的 *OppositeSubtree*.
+2. 將 *Root* 變成 *Pivot* 的 *RotationSubtree*.
+3. 檢查結果
+
+<!--
+In pseudocode the algorithm above could be written as follows:
+-->
+
+演算法的示意程式:
+
+```
+Root.OS = Pivot.RS
+Pivot.RS = Root
+Root = Pivot
+```
+
+<!--
+
+This is a constant time operation - __O(1)__
+Insertion never needs more than 2 rotations. Removal might require up to __log(n)__ rotations.
+-->
+
+這是一個常數時間的操作 - __O(1)__
+
+新增從來不需要超過 2 次輪轉. 移除可能需要 __log(n)__ 次輪轉.
+
+
 
 <!--
 ## The code
@@ -114,6 +162,7 @@ Most of the code in [AVLTree.swift](AVLTree.swift) is just regular [binary searc
 
 > **Note:** If you're a bit fuzzy on the regular operations of a binary search tree, I suggest you [catch up on those first](../Binary Search Tree/). It will make the rest of the AVL tree easier to understand.
 
+<<<<<<< HEAD
 The interesting bits are in the `balance()` method which is called after inserting or deleting a node. 
 -->
 

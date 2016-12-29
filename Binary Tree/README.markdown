@@ -39,8 +39,8 @@ Here's how you could implement a general-purpose binary tree in Swift:
 
 ```swift
 public indirect enum BinaryTree<T> {
-  case Node(BinaryTree<T>, T, BinaryTree<T>)
-  case Empty
+  case node(BinaryTree<T>, T, BinaryTree<T>)
+  case empty
 }
 ```
 
@@ -52,24 +52,24 @@ As an example of how to use this, let's build that tree of arithmetic operations
 
 ```swift
 // leaf nodes
-let node5 = BinaryTree.Node(.Empty, "5", .Empty)
-let nodeA = BinaryTree.Node(.Empty, "a", .Empty)
-let node10 = BinaryTree.Node(.Empty, "10", .Empty)
-let node4 = BinaryTree.Node(.Empty, "4", .Empty)
-let node3 = BinaryTree.Node(.Empty, "3", .Empty)
-let nodeB = BinaryTree.Node(.Empty, "b", .Empty)
+let node5 = BinaryTree.node(.empty, "5", .empty)
+let nodeA = BinaryTree.node(.empty, "a", .empty)
+let node10 = BinaryTree.node(.empty, "10", .empty)
+let node4 = BinaryTree.node(.empty, "4", .empty)
+let node3 = BinaryTree.node(.empty, "3", .empty)
+let nodeB = BinaryTree.node(.empty, "b", .empty)
 
 // intermediate nodes on the left
-let Aminus10 = BinaryTree.Node(nodeA, "-", node10)
-let timesLeft = BinaryTree.Node(node5, "*", Aminus10)
+let Aminus10 = BinaryTree.node(nodeA, "-", node10)
+let timesLeft = BinaryTree.node(node5, "*", Aminus10)
 
 // intermediate nodes on the right
-let minus4 = BinaryTree.Node(.Empty, "-", node4)
-let divide3andB = BinaryTree.Node(node3, "/", nodeB)
-let timesRight = BinaryTree.Node(minus4, "*", divide3andB)
+let minus4 = BinaryTree.node(.empty, "-", node4)
+let divide3andB = BinaryTree.node(node3, "/", nodeB)
+let timesRight = BinaryTree.node(minus4, "*", divide3andB)
 
 // root node
-let tree = BinaryTree.Node(timesLeft, "+", timesRight)
+let tree = BinaryTree.node(timesLeft, "+", timesRight)
 ```
 
 <!--
@@ -85,10 +85,10 @@ It will be useful to add a `description` method so you can print the tree:
 extension BinaryTree: CustomStringConvertible {
   public var description: String {
     switch self {
-    case let .Node(left, value, right):
+    case let .node(left, value, right):
       return "value: \(value), left = [" + left.description + "], right = [" 
                                          + right.description + "]"
-    case .Empty:
+    case .empty:
       return ""
     }
   }
@@ -131,9 +131,9 @@ Another useful method is counting the number of nodes in the tree:
 ```swift
   public var count: Int {
     switch self {
-    case let .Node(left, _, right):
+    case let .node(left, _, right):
       return left.count + 1 + right.count
-    case .Empty:
+    case .empty:
       return 0
     }
   }
@@ -166,7 +166,7 @@ Here is how you'd implement that:
 
 ```swift
   public func traverseInOrder(process: (T) -> Void) {
-    if case let .Node(left, value, right) = self {
+    if case let .node(left, value, right) = self {
       left.traverseInOrder(process: process)
       process(value)
       right.traverseInOrder(process: process)
@@ -174,7 +174,7 @@ Here is how you'd implement that:
   }
   
   public func traversePreOrder(process: (T) -> Void) {
-    if case let .Node(left, value, right) = self {
+    if case let .node(left, value, right) = self {
       process(value)
       left.traversePreOrder(process: process)
       right.traversePreOrder(process: process)
@@ -182,7 +182,7 @@ Here is how you'd implement that:
   }
   
   public func traversePostOrder(process: (T) -> Void) {
-    if case let .Node(left, value, right) = self {
+    if case let .node(left, value, right) = self {
       left.traversePostOrder(process: process)
       right.traversePostOrder(process: process)
       process(value)
