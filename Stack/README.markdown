@@ -5,6 +5,7 @@ A stack is like an array but with limited functionality. You can only *push* to 
 -->
 堆疊類似只有部分功能的陣列，可以使用 _push_ 新增元素到堆疊的最上層，使用 _pop_ 去取得並移除最上層的元素，使用 _peek_ 取得最上層元素但不移除。
 
+
 <!--
 Why would you want to do this? Well, in many algorithms you want to add objects to a temporary list at some point and then pull them off this list again at a later time. Often the order in which you add and remove these objects matters.
 -->

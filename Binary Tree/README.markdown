@@ -7,6 +7,7 @@ A binary tree is a [tree](../Tree/) where each node has 0, 1, or 2 children. Thi
 
 ![A binary tree](Images/BinaryTree.png)
 
+
 <!--
 The child nodes are usually called the *left* child and the *right* child. If a node doesn't have any children, it's called a *leaf* node. The *root* is the node at the very top of the tree (programmers like their trees upside down).
 

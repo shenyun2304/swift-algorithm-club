@@ -16,6 +16,8 @@ In computer-science lingo, a graph is a set of *vertices* paired with a set of *
 For example, a graph can represent a social network. Each person is a vertex, and people who know each other are connected by edges. A somewhat historically inaccurate example:
 -->
 
+
+
 在電腦科學中, 圖就是一個 *頂點集合* 搭配 *邊集合* 的集合. 節點就是上圖中圓圈的東西, 而邊就是連接兩個節點之間的線.
 
 > **注意:** 頂點有時被稱為 "節點", 而邊有時被稱為 "連結".

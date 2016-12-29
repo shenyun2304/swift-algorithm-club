@@ -12,6 +12,7 @@ For example:
 
 目標是實作一個 `String` 的 extension `indexOf(pattern: String)`, 會回傳要搜尋字串在原始字串中的第一個索引 `String.Index` 或 `nil` (當原始字串內不含要搜尋的字串).
 
+
 舉個例子:
 
 ```swift

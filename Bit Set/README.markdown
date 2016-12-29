@@ -18,6 +18,8 @@ Since manipulating individual bits is a little tricky, you can use `BitSet` to h
 不過要針對每個位元來操作需要點小技巧, 可以使用 `BitSet`(位元集) 來處理這件事.
 
 
+
+
 <!--
 ## The code
 

@@ -18,6 +18,8 @@ An advantage of the Bloom Filter over a hash table is that the former maintains 
 > **Note:** Unlike a hash table, the Bloom Filter does not store the actual objects. It just remembers what objects you’ve seen (with a degree of uncertainty) and which ones you haven’t.
 -->
 
+
+
 ## 介紹
 
 布隆過濾器是一個節省空間的資料結構, 可以判定哪些元素是否在集合中.

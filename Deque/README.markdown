@@ -15,6 +15,7 @@ Here is a very basic implementation of a deque in Swift:
 這裡用 Swift 實做一個非常基本的雙端佇列:
 
 
+
 ```swift
 public struct Deque<T> {
   private var array = [T]()

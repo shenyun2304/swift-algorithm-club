@@ -11,6 +11,7 @@ Common uses for heap:
 - Impressing your non-programmer friends.
 -->
 
+
 堆積是個活在陣列中的 [二元樹](../Binary Tree/), 它並不使用父節點或子節點. 這棵樹依據某些名為"堆積屬性"的特性來排序.
 
 堆積的一般使用:

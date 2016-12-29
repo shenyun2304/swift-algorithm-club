@@ -334,4 +334,5 @@ so in the worst case merging also can go up to the root, in which case the heigh
 
 
 
+
 *Written for Swift Algorithm Club by Viktor Szilárd Simkó*

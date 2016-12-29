@@ -8,6 +8,7 @@ In other words, we want to implement an `indexOf(pattern: String)` extension on 
 For example:
 -->
 
+
 目標: 使用純 Swift 撰寫一個字串搜尋的演算法, 不使用 Foundation 或使用 `NSString` 的 `rangeOfString()` 方法.
 
 換句話說, 我們要在 `String` class 上實作一個 `indexOf(pattern: String)` 的 extension, 回傳符合 pattern 的第一個字元的 `String.Index`, 如果 pattern 沒有吻合則回傳 `nil`.

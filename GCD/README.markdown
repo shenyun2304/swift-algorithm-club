@@ -12,6 +12,7 @@ The laborious way to find the GCD of two numbers is to first figure out the fact
 There is a smarter way to calculate the GCD: 歐幾里德's algorithm. The big idea here is that,
 -->
 
+
 `a` 和 `b` 的 *最大公因數* 是一個可以整除兩個數的公因數中, 最大的那個.
 
 舉個例子, `gcd(39 ,52) = 13`, 因為 13 可以整除 39 (`39/13 = 3)` 和 52 (`52/13 = 4)`.  而沒有比 13 更大個數可以同時整除它們.

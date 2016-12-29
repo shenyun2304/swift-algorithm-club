@@ -12,6 +12,8 @@ A bounded priority queue is similar to a regular [priority queue](../Priority Qu
 Suppose we have a bounded-priority-queue with maximum size 5 that has the following values and priorities:
 -->
 
+
+
 ## 範例
 
 假設我們有個有界優先佇列最大容量是 5 個元素:

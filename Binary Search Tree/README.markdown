@@ -87,6 +87,7 @@ Like most tree operations, this is performed recursively until either we find wh
 If we were looking for the value `5` in the example, it would go as follows:
 -->
 
+
 ## 搜尋
 
 想要在樹中找的一個值, 基本上的操作和插入是一樣的:

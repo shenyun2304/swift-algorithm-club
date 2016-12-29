@@ -6,6 +6,7 @@ A Red-Black tree is a special version of a [Binary Search  Tree](https://github.
 
 紅黑樹是特殊的 [二元搜尋樹](../Binary Search Tree/). 在二元搜尋樹中, 有可能因為大量的插入和刪除操作, 而使得樹變得不平衡. 二元搜尋樹和紅黑樹唯一的差異就在於紅黑樹有一個顏色的屬性, 每個節點可以是紅色或黑色. 一個紅黑樹會依照下列屬性重新的自我平衡:
 
+
 <!--
 ## Properties
 1. A node is either red or black

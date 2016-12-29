@@ -6,6 +6,7 @@ A tree represents hierarchical relationships between objects. This is a tree:
 
 樹呈現了物件之間的階層關係. 像這樣:
 
+
 ![A tree](Images/Tree.png)
 
 <!--

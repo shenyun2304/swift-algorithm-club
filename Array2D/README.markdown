@@ -170,4 +170,5 @@ And that's all there is to it.
 在內部來看, `Array2D` 使用了一個一維陣列來儲存資料. 內含的元素索引是以 `(列數 * 欄數) + 欄數` 來計算. 但是在使用 `Array2D` 上完全不需要考慮這些; 你只需要以 "欄" 和 "列" 來操作, 讓 `Array2D` 去處理細節. 這是將原始類型包裝到 class 或 struct 中的優點.
 
 
+
 *Written for Swift Algorithm Club by Matthijs Hollemans*
