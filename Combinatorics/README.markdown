@@ -257,7 +257,10 @@ permuteWirth([ "x", "y", "z" ], 2)
 	    swap a[0] and a[1] back
 ```
 
+<!--
 This swapped `"y"` and `"x"` and printed the result. We're done at this level of the recursion and go back to the top. This time we do two iterations of the `for` loop because `n = 2` here. The first iteration looks like this:
+-->
+這次交換了 `"y"` 和 `"x"` 並打印出來. 這時候這層的遞迴結束了, 回到最上層. 因為 `n = 2`, 所以最上層之下會有兩個遞迴. 第一次遞迴, 交換 a[0] 和 a[2]:
 
 ```swift
 permuteWirth([ "x", "y", "z" ], 2)   <--- back to this level
@@ -270,7 +273,11 @@ permuteWirth([ "x", "y", "z" ], 2)   <--- back to this level
     swap a[0] and a[2] back
 ```
 
+<!--
 And the second iteration:
+-->
+
+第二次遞迴, 交換 a[1], a[2]:
 
 ```swift
 permuteWirth([ "x", "y", "z" ], 2)
@@ -283,31 +290,57 @@ permuteWirth([ "x", "y", "z" ], 2)
     swap a[1] and a[2] back
 ```
 
+<!--
 To summarize, first it swaps these items:
+-->
+簡單來說, 第一次交換了這些元素:
 
 	[ 2, 1, - ]
 
+<!--
 Then it swaps these:
+-->
+然後交換這些:
 
 	[ 3, -, 1 ]
 
+<!--
 Recursively, it swaps the first two again:
+-->
+在遞迴中交換前兩個元素:
 
 	[ 2, 3, - ]
 
+<!--
 Then it goes back up one step and swaps these:
+-->
+
+然後回到上一層並交換這些:
 
 	[ -, 3, 2 ]
 
+<!--
 And finally the first two again:
+-->
+
+最後再次交換前兩個:
 
 	[ 3, 1, - ]
 
+<!--
 Of course, the larger your array is, the more swaps it performs and the deeper the recursion gets.
 
 If the above is still not entirely clear, then I suggest you give it a go in the playground. That's what playgrounds are great for. :-)
 
 For fun, here is an alternative algorithm, by Robert Sedgewick:
+-->
+
+當然陣列如果越大, 那就會執行到更深層的遞迴.
+
+如果對上面解釋沒有很清楚了解, 我建議可以在 playground 中玩玩看. 
+
+這是另一個演算法, 由 Robert Sedgewick 提供:
+
 
 ```swift
 func permuteSedgewick(_ a: [Int], _ n: Int, _ pos: inout Int) {
@@ -328,7 +361,11 @@ func permuteSedgewick(_ a: [Int], _ n: Int, _ pos: inout Int) {
 }
 ```
 
+<!--
 You use it like this:
+-->
+
+可以這樣用:
 
 ```swift
 let numbers = [0, 0, 0, 0]
@@ -336,9 +373,16 @@ var pos = -1
 permuteSedgewick(numbers, 0, &pos)
 ```
 
+<!--
 The array must initially contain all zeros. 0 is used as a flag that indicates more work needs to be done on each level of the recursion.
 
 The output of the Sedgewick algorithm is:
+-->
+
+這個陣列初始時必續全部元素都為 0. 0 項是一個旗標一樣表示在每層遞迴中還有事要做:
+
+這演算法會打印出這樣:
+
 
 ```swift
 [1, 2, 3, 0]
@@ -349,40 +393,71 @@ The output of the Sedgewick algorithm is:
 ...
 ```
 
+<!--
 It can only deal with numbers, but these can serve as indices into the actual array you're trying to permute, so it's just as powerful as Wirth's algorithm.
 
 Try to figure out for yourself how this algorithm works!
+-->
 
+這演算法只能使用數字, 但是可以將這些數字當作你陣列的索引來使用, 那就可以將你的陣列做排列啦!
+
+<!--
 ## Combinations
 
 A combination is like a permutation where the order does not matter. The following are six different permutations of the letters `k` `l` `m` but they all count as the same combination:
+-->
+
+## 組合
+
+組合跟排列很像只是不在意元素的順序. 下列是 6 種針對 `k` `l` `m` 不同的排列, 但是他們都歸於同一種組合:
 
 	k, l, m      k, m, l      m, l, k
 	l, m, k      l, k, m      m, k, l
 
+<!--
 So there is only one combination of size 3. However, if we're looking for combinations of size 2, we can make three:
+-->
+
+所以在選取 3 個元素的組合下只有一種情形, 如果我們選取 2 個元素, 我們可以找到 3 種組合:
 
 	k, l      (is the same as l, k)
 	l, m      (is the same as m, l)
 	k, m      (is the same as m, k)
 
+<!--
 The `C(n, k)` function counts the number of ways to choose `k` things out of `n` possibilities. That's why it's also called "n-choose-k". (A fancy mathematical term for this number is "binomial coefficient".)
 
 The formula for `C(n, k)` is:
+-->
+
+`C(n, k)` 計算在 `n` 個元素衝要取出 `k` 個元素會有幾種結果. 這是為什麼它稱為 "n 取 k". (在數學上稱為二項式係數)
+
+`C(n, k)` 的公式為:
+
 
 	               n!         P(n, k)
 	C(n, k) = ------------- = --------
 	          (n - k)! * k!      k!
 
+<!--
 As you can see, you can derive it from the formula for `P(n, k)`. There are always more permutations than combinations. You divide the number of permutations by `k!` because a total of `k!` of these permutations give the same combination.
 
 Above I showed that the number of permutations of `k` `l` `m` is 6, but if you pick only two of those letters the number of combinations is 3. If we use the formula we should get the same answer. We want to calculate `C(3, 2)` because we choose 2 letters out of a collection of 3.
+-->
+
+可以將組合看成是排列 `P(n, k)` 的變化. 通常排列數會比組合數還多. 你將排列數除以 `k!`, 因為總共有 `k!` 個排列是同一種元素組合.
+
+上面提過 `k` `l` `m` 的排列數是 6, 而你只取兩個元素的組合數就是 3. 如果我們用公式來算也會得到相同的結果. 我們計算 `C(3, 2)`, 因為要從 3 個元素的集合中取 2 個元素出來.
 
 	          3 * 2 * 1    6
 	C(3, 2) = --------- = --- = 3
 	           1! * 2!     2
 
+<!--
 Here's a simple function to calculate `C(n, k)`:
+-->
+
+計算 `C(m, k)` 的簡單方式:
 
 ```swift
 func combinations(_ n: Int, choose k: Int) -> Int {
@@ -390,27 +465,46 @@ func combinations(_ n: Int, choose k: Int) -> Int {
 }
 ```
 
+<!--
 Use it like this:
+-->
+
+這樣使用:
 
 ```swift
 combinations(28, choose: 5)    // prints 98280
 ```
 
+<!--
 Because this uses the `permutations()` and `factorial()` functions under the hood, you're still limited by how large these numbers can get. For example, `combinations(30, 15)` is "only" `155,117,520` but because the intermediate results don't fit into a 64-bit integer, you can't calculate it with the given function.
 
 There's a faster approach to calculate `C(n, k)` in **O(k)** time and **O(1)** extra space. The idea behind it is that the formula for `C(n, k)` is:
+-->
+
+因為實際上是使用 `permutations()` 和 `factorial()`, 所以還是會受到溢位的限制. 舉例來說 `combinations(30 , 15)` "只有" `155,117,520`, 但因為中間的過程無法放進 64 位元的整數型態中, 所以你無法獲得正確答案.
+
+有個使用 **O(k)** 時間和 **O(1)** 記憶體的方法來計算 `C(n, k)`, 概念是把公式整理成這樣:
+
 
                    n!                      n * (n - 1) * ... * 1
     C(n, k) = ------------- = ------------------------------------------
               (n - k)! * k!      (n - k) * (n - k - 1) * ... * 1 * k!
 
+<!--
 After the reduction of fractions, we get the following formula:
+-->
+
+經過分子分母相消後, 我們得到以下公式:
 
                    n * (n - 1) * ... * (n - k + 1)         (n - 0) * (n - 1) * ... * (n - k + 1)
     C(n, k) = --------------------------------------- = -----------------------------------------
                                k!                          (0 + 1) * (1 + 1) * ... * (k - 1 + 1)
 
+<!--
 We can implement this formula as follows:
+-->
+
+實作:
 
 ```swift
 func quickBinomialCoefficient(_ n: Int, choose k: Int) -> Int {
@@ -423,18 +517,30 @@ func quickBinomialCoefficient(_ n: Int, choose k: Int) -> Int {
 }
 ```
 
+<!--
 This algorithm can create larger numbers than the previous method. Instead of calculating the entire numerator (a potentially huge number) and then dividing it by the factorial (also a very large number), here we already divide in each step. That causes the temporary results to grow much less quickly.
 
 Here's how you can use this improved algorithm:
+-->
+
+這個演算法可以計算出更大的組合數. 與其計算完最後的排列數後在除以階乘數, 我們在每個小步就把排列數和階乘數除完, 這樣就讓結果增大的速度減緩很多.
+
 
 ```swift
 quickBinomialCoefficient(8, choose: 2)     // prints 28
 quickBinomialCoefficient(30, choose: 15)   // prints 155117520
 ```
 
+<!--
 This new method is quite fast but you're still limited in how large the numbers can get. You can calculate `C(30, 15)` without any problems, but something like `C(66, 33)` will still cause integer overflow in the numerator.
 
 Here is an algorithm that uses dynamic programming to overcome the need for calculating factorials and doing divisions. It is based on Pascal's triangle:
+-->
+
+這個新的方法速度很快, 但是你還是會受到最大整數的限制. 雖然計算 `C(30, 15)` 沒問題, 但是像 `C(66, 33)` 還是會造成整數溢位.
+
+還有一種動態演算法解決階乘和相除的問題, 基礎是巴斯卡三角形:
+
 
 	0:               1
 	1:             1   1
@@ -444,9 +550,13 @@ Here is an algorithm that uses dynamic programming to overcome the need for calc
 	5:     1   5  10   10  5   1
 	6:   1   6  15  20   15  6   1
 
+<!--
 Each number in the next row is made up by adding two numbers from the previous row. For example in row 6, the number 15 is made by adding the 5 and 10 from row 5. These numbers are called the binomial coefficients and as it happens they are the same as `C(n, k)`.
 
 For example, for row 6:
+-->
+
+每列的每個數字是從上一列相鄰的兩個數字相加而來. 舉例來說, 第 6 列, 數字 15 是從第 5 列的 10 + 5 得來. 這些數字稱為二項式係數, 而他們和 `C(n, k)` 相同.
 
 	C(6, 0) = 1
 	C(6, 1) = 6
@@ -456,7 +566,11 @@ For example, for row 6:
 	C(6, 5) = 6
 	C(6, 6) = 1
 
+<!--
 The following code calculates Pascal's triangle in order to find the `C(n, k)` you're looking for:
+-->
+
+以下的程式碼以巴斯卡三角形來計算 `C(n, k)`:
 
 ```swift
 func binomialCoefficient(_ n: Int, choose k: Int) -> Int {
@@ -479,18 +593,33 @@ func binomialCoefficient(_ n: Int, choose k: Int) -> Int {
 }
 ```
 
+<!--
 The algorithm itself is quite simple: the first loop fills in the 1s at the outer edges of the triangle. The other loops calculate each number in the triangle by adding up the two numbers from the previous row.
 
 Now you can calculate `C(66, 33)` without any problems:
+-->
+
+這演算法本身很簡單: 第一次迴圈把三角形最左和最右邊的 1 填滿. 第二個迴圈就把中間的數值填滿.
+
+那現在就可以計算 `C(66, 33)` 而不產生溢位:
+
 
 ```swift
 binomialCoefficient(66, choose: 33)   // prints a very large number
 ```
 
+<!--
 You may wonder what the point is in calculating these permutations and combinations, but many algorithm problems are really combinatorics problems in disguise. Often you may need to look at all possible combinations of your data to see which one gives the right solution. If that means you need to search through `n!` potential solutions, you may want to consider a different approach -- as you've seen, these numbers become huge very quickly!
 
 ## References
 
 Wirth's and Sedgewick's permutation algorithms and the code for counting permutations and combinations are based on the Algorithm Alley column from Dr.Dobb's Magazine, June 1993. The dynamic programming binomial coefficient algorithm is from The Algorithm Design Manual by Skiena.
+-->
+
+你可以對於計算排列與組合的目的感到疑惑, 但很多演算法的問題其實都是排列組合的事情. 你可能會你資料中所有的組合來找到正確的結果. 那表示你要搜尋 `n!` 來找答案. 如果是這樣, 你可能需要考慮其他方法 -- 從上面看來, 這個階乘數會很快的變得很大!
+
+## 參考
+
+Writh 和 Sedgewick 的排列演算法是以 Dr.Dobb's 雜誌在 1993 年 7 月中的 Algorithm Alley 專欄為基礎. 而動態二項式係數演算法是 Skiena 的 Algorithm Design Manual.
 
 *Written for Swift Algorithm Club by Matthijs Hollemans and [Kanstantsin Linou](https://github.com/nuts23)*
