@@ -1,12 +1,22 @@
-# Huffman Coding
+# Huffman Coding (霍夫曼編碼)
 
+<!--
 The idea: Encode objects that occur often with a smaller number of bits than objects that occur less frequently.
 
 Although you can encode any type of objects with this scheme, it's most common to compress a stream of bytes. Let's say you have the following text, where each character is one byte:
+-->
+
+概念: 將越常出現的物件給予越小的編碼.
+
+雖然你可以將此編碼法用於任何型態的物件, 但它一般使用上還是用在壓縮位元組上. 讓我們舉以下字串做例子, 每個字元是一個 byte:
 
 	so much words wow many compression
 
+<!--
 If you count how often each byte appears, you can clearly see that some bytes occur more than others:
+-->
+
+如果你計算每個字元的出現次數, 可以很千處的看到有些很常出現:
 
 	space: 5                  u: 1
 	    o: 5	              h: 1
@@ -17,7 +27,11 @@ If you count how often each byte appears, you can clearly see that some bytes oc
 	    r: 2	              e: 1
 	    n: 2	              i: 1
 	
+<!--
 We can assign bit strings to each of these bytes. The more common a byte is, the fewer bits we assign to it. We might get something like this:
+-->
+我們可以賦予每個字元一個位元字串. 越常出現, 字串就越少. 像這樣:
+
 
 	space: 5    010           u: 1    11001
 	    o: 5    000	          h: 1    10001
@@ -28,7 +42,12 @@ We can assign bit strings to each of these bytes. The more common a byte is, the
 	    r: 2    1001	      e: 1    01110
 	    n: 2    0110	      i: 1    10000
 
+<!--
 Now if we replace the original bytes with these bit strings, the compressed output becomes:
+-->
+
+現在我們將原始字串用位元字串來取代:
+
 
 	101 000 010 111 11001 0011 10001 010 0010 000 1001 11010 101 
 	s   o   _   m   u     c    h     _   w    o   r    d     s
@@ -39,18 +58,32 @@ Now if we replace the original bytes with these bit strings, the compressed outp
 	11000 1001 01110 101 101 10000 000 0110 0
 	p     r    e     s   s   i     o   n
 
+<!--
 The extra 0-bit at the end is there to make a full number of bytes. We were able to compress the original 34 bytes into merely 16 bytes, a space savings of over 50%!
 
 But hold on... to be able to decode these bits we need to have the original frequency table. That table needs to be transmitted or saved along with the compressed data, otherwise the decoder doesn't know how to interpret the bits. Because of the overhead of this frequency table (about 1 kilobyte), it doesn't really pay to use Huffman encoding on very small inputs.
+-->
 
+最後一個 0 是為了組成完整的 byte. 我們現在可以將一個 34 bytes 的字串壓縮到 16 bytes, 省了超過 50%!
+
+但等等... 要能夠還原位元碼變字元, 我們需要字元與位元的對照表. 這個表需要和壓縮後的資料一起儲存, 不然了話解碼器不知道如何解開這些位元. 因為這個對照表所佔用的空間 (大概是 1k bytes), 對於非常小的資料做霍夫曼壓縮是不划算的.
+
+
+<!--
 ## How it works
 
 When compressing a stream of bytes, the algorithm first creates a frequency table that counts how often each byte occurs. Based on this table it creates a binary tree that describes the bit strings for each of the input bytes.
 
 For our example, the tree looks like this:
+-->
+
+## 如何運作
+
+當在壓縮位元組時, 演算法先創建一張計數的對照表. 然後再依據這張表建立一個二元樹, 最後會像這樣:
 
 ![The compression tree](Images/Tree.png)
 
+<!--
 Note that the tree has 16 leaf nodes (the grey ones), one for each byte value from the input. Each leaf node also shows the count of how often it occurs. The other nodes are "intermediate" nodes. The number shown in these nodes is the sum of the counts of their child nodes. The count of the root node is therefore the total number of bytes in the input.
 
 The edges between the nodes either say "1" or "0". These correspond to the bit-encodings of the leaf nodes. Notice how each left branch is always 1 and each right branch is always 0.
@@ -60,10 +93,27 @@ Compression is then a matter of looping through the input bytes, and for each by
 For example, to go from the root node to `c`, we go right (`0`), right again (`0`), left (`1`), and left again (`1`). So the Huffman code for `c` is `0011`. 
 
 Decompression works in exactly the opposite way. It reads the compressed bits one-by-one and traverses the tree until we get to a leaf node. The value of that leaf node is the uncompressed byte. For example, if the bits are `11010`, we start at the root and go left, left again, right, left, and a final right to end up at `d`.
+-->
 
+注意到這棵樹有 16 個葉節點 (灰色的那些), 每個節點都代表一個字元. 每個葉節點的數值表示該字元出現的次數. 其他的節點稱為 "中間節點". 中間節點上的數值是它兩個子節點數值的加總. 所以根節點的數值就是總共的字元數.
+
+節點的邊不是 "1" 就是 "0". 這對應著葉節點的位元編碼. 注意到左邊永遠是 1 右邊永遠是 0.
+
+壓縮過程就是從根節點走訪每個葉節點. 而路徑就是該葉節點的位元編碼.
+
+舉例來說, 從根節點走道 `c`, 我們先走右邊 (`0`) -> 右邊 (`0`) -> 左邊 (`1`) -> 左邊 (`1`). 所以 `c` 的霍夫曼編碼就是 `0011`.
+
+解壓縮就是反向操作. 一個一個位元讀取然後走訪樹直到遇到葉節點. 舉例來說, 假設讀取 `11010`, 我們從根節點開始走訪 左 -> 左 -> 右 -> 左 -> 右, 到達葉節點 `d`.
+
+
+<!--
 ## The code
 
 Before we get to the actual Huffman coding scheme, it's useful to have some helper code that can write individual bits to an `NSData` object. The smallest piece of data that `NSData` understands is the byte, but we're dealing in bits, so we need to translate between the two.
+-->
+## 程式碼:
+
+在我們接觸真的霍夫曼編碼之前, 一個可以將位元轉換成 `NSData` 物件的程式碼是有幫助的. 在 `NSData` 中最小的資料大小是 byte (位元組), 可是我們在處理的是位元 (bit), 所以我們需要在這兩者之間作轉換:
 
 ```swift
 public class BitWriter {
@@ -92,11 +142,19 @@ public class BitWriter {
 }
 ```
 
+<!--
 To add a bit to the `NSData` you call `writeBit()`. This stuffs each new bit into the `outByte` variable. Once you've written 8 bits, `outByte` gets added to the `NSData` object for real.
 
 The `flush()` method is used for outputting the very last byte. There is no guarantee that the number of compressed bits is a nice round multiple of 8, in which case there may be some spare bits at the end. If so, `flush()` adds a few 0-bits to make sure that we write a full byte.
 
 We'll use a similar helper object for reading individual bits from `NSData`:
+-->
+
+要在 `NSData` 中新增一個位元, 你可以呼叫 `writeBit()`. 它會在每次呼叫就塞一個位元到 `outByte` 變數中. 一但寫入了 8 個位元, `outByte` 就把整個 byte 塞到 `NSData` 裡面.
+
+`flush()` 方法是在處理最後一個位元組. 因為並沒有保證塞進去的位元都可以組成完整的位元組 (8 個倍數), 所以可能需要在尾端塞幾個補充的位元. `flush()` 計算還差多少個位才能組成完整的位元組, 然後塞 0 去填滿最後的位元組.
+
+我們使用類似的物件來從 `NSData` 中讀取每個位元:
 
 ```swift
 public class BitReader {
@@ -122,10 +180,18 @@ public class BitReader {
 }
 ```
 
+<!--
 This works in a similar fashion. We read one whole byte from the `NSData` object and put it in `inByte`. Then `readBit()` returns the individual bits from that byte. Once `readBit()` has been called 8 times, we read the next byte from the `NSData`.
 
 > **Note:** It's no big deal if you're unfamiliar with this sort of bit manipulation. Just know that these two helper objects make it simple for us to write and read bits and not worry about all the messy stuff of making sure they end up in the right place.
+-->
 
+
+原理類似. 我們要從 `NSData` 中讀取一整個 byte 然後放到 `inByte` 變數中. 然後 `readBit()` 方法一個一個回傳該變數中的每個位元, 並以布林值回傳表示. 一旦 `readBit()` 被呼叫了 8 次, 我們就從 `NSData` 中讀取下一個 byte.
+
+> **Note:** 如果你不熟悉位元操作也沒關線. 只要知道這兩個物件是來幫助寫入和讀取位元時不需要去管這些位元的位置是否正確.
+
+<!--
 ## The frequency table
 
 The first step in Huffman compression is to read the entire input stream and build a frequency table. This table contains a list of all 256 possible byte values and how often each of these bytes occurs in the input data.
@@ -133,6 +199,15 @@ The first step in Huffman compression is to read the entire input stream and bui
 We could store this frequency information in a dictionary or an array, but since we're going to need to build a tree anyway, we might as well store the frequency table as the leaves of the tree.
 
 Here are the definitions we need:
+-->
+
+## 頻率對照表
+
+霍夫曼壓縮第一步是讀取整個輸入串, 然後建立頻率對照表. 這張表包含了 byte 用位元表示的 256 個組合, 還有每個值相對應的出現次數.
+
+我們可以將頻率資訊存到字典或陣列中, 但因為不管怎樣都得建立一棵樹, 所以乾脆就用樹來儲存頻率對照表.
+
+以下是一些我們需要的定義:
 
 ```swift
 class Huffman {
@@ -152,11 +227,18 @@ class Huffman {
 }
 ```
 
+<!--
 The tree structure is stored in the `tree` array and will be made up of `Node` objects. Since this is a [binary tree](../Binary Tree/), each node needs two children, `left` and `right`, and a reference back to its `parent` node. Unlike a typical binary tree, however, these nodes don't to use pointers to refer to each other but simple integer indices in the `tree` array. (We also store the array `index` of the node itself; the reason for this will become clear later.)
 
 Note that `tree` currently has room for 256 entries. These are for the leaf nodes because there are 256 possible byte values. Of course, not all of those may end up being used, depending on the input data. Later, we'll add more nodes as we build up the actual tree. For the moment there isn't a tree yet, just 256 separate leaf nodes with no connections between them. All the node counts are 0.
 
 We use the following method to count how often each byte occurs in the input data:
+-->
+
+樹結構儲存在 `tree` 變數中, 是個內含 `Node` 型別元素的陣列. 因為這是一個 [二元樹](../Binary Tree/), 每個節點有兩個子節點, `left` 和 `right`, 還有該節點父節點的參考 `parent`. 和一般二元樹不同的地方是, 這些節點的 `left`, `right`, `parent` 變數不需要真的儲存到其他節點的參考, 只需要儲存該對應節點在 `tree` 陣列中的索引. (我們也用了 `index` 變數儲存了節點本身在 `tree` 陣列中的索引; 理由待會會解釋清楚.)
+
+注意現在 `tree` 有 256 個空間. 因為對於葉節點來說, 總共會有 256 種不同的 byte 組合.
+
 
 ```swift
   private func countByteFrequency(data: NSData) {
