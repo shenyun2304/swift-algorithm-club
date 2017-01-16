@@ -221,13 +221,24 @@ Here is how the code works.
 程式是這樣運作的.
 
 1. 複製陣列. 這是必須的, 因為我們不能直接修改帶入參數 `array` 的值. 就像 Swift 內建的 `sort()`, `insertionSort()` 函式將回傳 *複製* 原陣列後排序過的陣列.
-2. 
+2. 函式中有兩個迴圈. 外層迴圈一步一步地走訪陣列的每個索引; 這是在取得管線中最前端的元素. `x` 變數表示有序端最後的下一個索引, 也就是管線的起點索引 (`|` 的位置). 記住, 在任何時候, 陣列的前端 -- 從索引 0 到 `x` -- 總是有序的. 而剩下的, 從 `x` 開始直到最後的元素, 是無序的管線.
+3. 內層迴圈觀察 `x` 的值. 這個數值表示無序管線的起始索引, 而在這個索引的元素有可能比之前的任何元素都還小. 內部迴圈反向的走訪有序陣列的部分; 每次找到有比這個元素還要大的值, 就將這兩個元素交換. 當內部迴圈走完, 陣列的前端又再次有序. 而陣列前端有序的部分就成長了一個位置.
 
+> **注意:** 外部迴圈從索引 1 開始, 不是 0. 把第一個元素從無序管線移到有序陣列並沒有改變什麼, 所以我們直接跳過索引 0.
+
+<!--
 ## No more swaps
 
 The above version of insertion sort works fine, but it can be made a tiny bit faster by removing the call to `swap()`. 
 
 You've seen that we swap numbers to move the next element into its sorted position:
+-->
+
+## 不再交換
+
+上述版本可以正常運作, 但可以做一點小調整讓它更快, 就是不要呼叫 `swap()`.
+
+你已經看過我們利用交換來移動元素到正確的位置:
 
 	[ 3, 5, 8, 4 | 6 ]
 	        <-->
@@ -237,7 +248,11 @@ You've seen that we swap numbers to move the next element into its sorted positi
          <-->
 	     swap
 
+<!--
 Instead of swapping with each of the previous elements, we can just shift all those elements one position to the right, and then copy the new number into the right position.
+-->
+
+相較於和前一個元素一直交換, 我們可以簡單地把所有元素都向右移動一個位置, 最後把新的元素複製 (覆寫) 到正確的位置上.
 
 	[ 3, 5, 8, 4 | 6 ]   remember 4
 	           *
@@ -251,7 +266,11 @@ Instead of swapping with each of the previous elements, we can just shift all th
 	[ 3, 4, 5, 8 | 6 ]   copy 4 into place
 	     *
 
+<!--
 In code that looks like this:
+-->
+
+現在程式碼像這樣:
 
 ```swift
 func insertionSort(_ array: [Int]) -> [Int] {
@@ -269,31 +288,57 @@ func insertionSort(_ array: [Int]) -> [Int] {
 }
 ```
 
+<!--
 The line at `//1` is what shifts up the previous elements by one position. At the end of the inner loop, `y` is the destination index for the new number in the sorted portion, and the line at `//2` copies this number into place.
+-->
 
+在 `//1` 那行把元素往右移動一個位置. 在內部迴圈中, `y` 表示排序後新元素的位置索引, 在 `//2` 就把新元素覆寫該位置上.
+
+<!--
 ## Making it generic
 
 It would be nice to sort other things than just numbers. We can make the datatype of the array generic and use a user-supplied function (or closure) to perform the less-than comparison. This only requires two changes to the code.
 
 The function signature becomes:
+-->
+
+## 泛型化
+
+如果可以對數字以外型態的物件作排序就好了. 我們可以讓陣列接收泛型元素, 並使用客製化定義的函數 (或閉包) 來實現小於操作. 只需要修改兩點程式.
+
+函式宣告變成這樣:
 
 ```swift
 func insertionSort<T>(_ array: [T], _ isOrderedBefore: (T, T) -> Bool) -> [T] {
 ```
 
+<!--
 The array has type `[T]` where `T` is the placeholder type for the generics. Now `insertionSort()` will accept any kind of array, whether it contains numbers, strings, or something else.
 
 The new parameter `isOrderedBefore: (T, T) -> Bool` is a function that takes two `T` objects and returns true if the first object comes before the second, and false if the second object should come before the first. This is exactly what Swift's built-in `sort()` function does.
 
 The only other change is in the inner loop, which now becomes:
+-->
+
+陣列宣告為 `[T]`, `T` 為泛型型態. 現在 `insertionSort()` 將可以接受任意型別的陣列, 無論是數值, 字串或其他的.
+
+新的參數 `isOrderedBefore: (T, T) -> Bool` 是個接收兩個 `T` 型態物件且回傳布林值的函數, 回傳 true 如果第一個元素小於第二個, 而回傳 false 當地一個元素大於第二個. 這正是 Swift 原生 `sort()` 函式在做的事.
+
+另一個改變是內部迴圈, 現在變這樣:
 
 ```swift
       while y > 0 && isOrderedBefore(temp, a[y - 1]) {
 ```
 
+<!--
 Instead of writing `temp < a[y - 1]`, we call the `isOrderedBefore()` function. It does the exact same thing, except we can now compare any kind of object, not just numbers.
 
 To test this in a playground, do:
+-->
+
+相較於 `temp < a[y - 1]`, 我們呼叫 `isOrderedBefore()` 函式. 不過做的事情是一樣的, 只不過我們現在可以對物件作比較, 而不只是數值.
+
+在 playground 中試試看:
 
 ```swift
 let numbers = [ 10, -1, 3, 9, 2, 27, 8, 5, 1, 3, 0, 26 ]
@@ -301,26 +346,44 @@ insertionSort(numbers, <)
 insertionSort(numbers, >)
 ```
 
+<!--
 The `<` and `>` determine the sort order, low-to-high and high-to-low, respectively.
 
 Of course, you can also sort other things such as strings,
+-->
+
+`<` 和 `>` 決定了排序的規則是遞增或遞減.
+
+當然, 你也可以對字串做排序.
+
 
 ```swift
 let strings = [ "b", "a", "d", "c", "e" ]
 insertionSort(strings, <)
 ```
 
+<!--
 or even more complex objects:
+-->
+
+或更複雜的物件:
 
 ```swift
 let objects = [ obj1, obj2, obj3, ... ]
 insertionSort(objects) { $0.priority < $1.priority }
 ```
 
+<!--
 The closure tells `insertionSort()` to sort on the `priority` property of the objects.
 
 Insertion sort is a *stable* sort. A sort is stable when elements that have identical sort keys remain in the same relative order after sorting. This is not important for simple values such as numbers or strings, but it is important when sorting more complex objects. In the example above, if two objects have the same `priority`, regardless of the values of their other properties, those two objects don't get swapped around.
+-->
 
+這個閉包告訴 `insertionSort()` 依照物件的 `priority` 去排序. 當具有相同排序鍵值的元素在排序後保持相同的順序時, 這個排序法就是穩定的.
+
+插入排序是個 *穩定* 的排序. 這對於簡單的值, 像是數字或字串, 不怎麼重要, 但是對於複雜的物件, 這就很重要了. 上述例子中, 如果兩個物件有相同的 `priority`, 那無論這兩個物件其他的屬性, 他們都不會交換位置.
+
+<!--
 ## Performance
 
 Insertion sort is really fast if the array is already sorted. That sounds obvious, but this is not true for all search algorithms. In practice, a lot of data will already be largely -- if not entirely -- sorted and insertion sort works quite well in that case.
@@ -330,8 +393,22 @@ The worst-case and average case performance of insertion sort is **O(n^2)**. Tha
 Insertion sort is actually very fast for sorting small arrays. Some standard libraries have sort functions that switch from a quicksort to insertion sort when the partition size is 10 or less.
 
 I did a quick test comparing our `insertionSort()` with Swift's built-in `sort()`. On arrays of about 100 items or so, the difference in speed is tiny. However, as your input becomes larger, **O(n^2)** quickly starts to perform a lot worse than **O(n log n)** and insertion sort just can't keep up.
+-->
 
+## 效能
+
+插入排序對已經是有序陣列上的處理是非常快速的. 這聽起來很明顯, 但並不是每個演算法都可以做到. 實作上, 很多資料都會呈現部分大量 -- 可能不是全部 -- 的排序, 這時候插入排序處理就很棒.
+
+最糟和平均的狀況是 **O(n^2)**. 因為有巢狀迴圈在排序過程中. 其他的排序演算法, 像是快速排序或合併排序, 可以做到 **O(n log n)** 的表現, 在資料量大的時候會比較快速.
+
+插入排序對於小陣列的排序是真的非常快. 一些有排序的函式標準函式庫會在元素小於 10 個或更少時會轉換成插入排序演算法來做.
+
+我做了個快速的測試我們的 `insertionSort()` 和 Swift 原生的 `sort()`. 對於內含 100 的左右元素的陣列, 差異是非常小的. 不過, 當你的資料量大到一個程度的時候, **O(n^2)** 會急速的比 **(n log n)** 還糟, 造成插入排序無論如何也比不上其他的演算法.
+
+<!--
 ## See also
+-->
+## 相關閱讀
 
 [Insertion sort on Wikipedia](https://en.wikipedia.org/wiki/Insertion_sort)
 
