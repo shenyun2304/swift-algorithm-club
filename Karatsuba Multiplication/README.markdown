@@ -175,6 +175,7 @@ What about the running time of this algorithm? Is all this extra work worth it? 
 
 ## 參考資源
 
+
 [Wikipedia] (https://en.wikipedia.org/wiki/Karatsuba_algorithm)
 
 [WolframMathWorld] (http://mathworld.wolfram.com/KaratsubaMultiplication.html) 
