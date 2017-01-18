@@ -1,6 +1,10 @@
-# Linked List
+# Linked List (鏈結列表)
 
+<!--
 A linked list is a sequence of data items, just like an array. But where an array allocates a big block of memory to store the objects, the elements in a linked list are totally separate objects in memory and are connected through links:
+-->
+
+鏈結列表事一個資料的序列, 跟陣列很像. 但是陣列是一個大型連續的記憶體空間, 連結陣列中的物件幾乎都是分散在記憶體之中的, 互相使用鏈結來連接:
 
 	+--------+    +--------+    +--------+    +--------+
 	|        |    |        |    |        |    |        |
@@ -8,7 +12,11 @@ A linked list is a sequence of data items, just like an array. But where an arra
 	|        |    |        |    |        |    |        |
 	+--------+    +--------+    +--------+    +--------+
 
+<!--
 The elements of a linked list are referred to as *nodes*. The above picture shows a *singly linked list*, where each node only has a reference -- or a "pointer" -- to the next node. In a *doubly linked list*, shown below, nodes also have pointers to the previous node:
+-->
+
+在鏈結列表中的元素就像 *節點* 一樣. 上面展示一個 *單向鏈結列表*, 每個節點含有到下一個節點的參考 -- 或稱 "指標". 在 *雙向鏈結列表* 中, 節點還會有前一個節點的指標.
 
 	+--------+    +--------+    +--------+    +--------+
 	|        |--->|        |--->|        |--->|        |
@@ -16,7 +24,12 @@ The elements of a linked list are referred to as *nodes*. The above picture show
 	|        |<---|        |<---|        |<---|        |
 	+--------+    +--------+    +--------+    +--------+
 
+<!--
 You need to keep track of where the list begins. That's usually done with a pointer called the *head*:
+-->
+
+
+你需要追蹤列表的起點. 通常用一個指標 (*head*) 就解決了:
 
 	         +--------+    +--------+    +--------+    +--------+
 	head --->|        |--->|        |--->|        |--->|        |---> nil
@@ -24,8 +37,13 @@ You need to keep track of where the list begins. That's usually done with a poin
 	 nil <---|        |<---|        |<---|        |<---|        |<--- tail
 	         +--------+    +--------+    +--------+    +--------+
 
+<!--
 It's also useful to have a reference to the end of the list, known as the *tail*. Note that the "next" pointer of the last node is `nil`, just like the "previous" pointer of the very first node.
+-->
 
+在結尾有個指標也挺有用的, 如圖中的 *tail*. 注意到最後一個元素的 "下一個" 指標是 `nil`, 就像第一個元素的 "前一個" 指標一樣.
+
+<!--
 ## Performance of linked lists
 
 Most operations on a linked list have **O(n)** time, so linked lists are generally slower than arrays. However, they are also much more flexible -- rather than having to copy large chunks of memory around as with an array, many operations on a linked list just require you to change a few pointers.
@@ -35,7 +53,20 @@ The reason for the **O(n)** time is that you can't simply write `list[2]` to acc
 But once you have a reference to a node, operations like insertion and deletion are really quick. It's just that finding the node is slow.
 
 This means that when you're dealing with a linked list, you should insert new items at the front whenever possible. That is an **O(1)** operation. Likewise for inserting at the back if you're keeping track of the `tail` pointer.
+-->
 
+## 表現
+
+大部分的鏈結列表都是 **O(n)** 時間, 所以鏈結列表通常是比陣列還要慢的.
+不過呢, 鏈結列表更以彈性 -- 比起陣列那種要使用整區的記憶體空間, 很多鏈結料表的操作只需要改變幾個指標.
+
+會是 **O(n)** 的原因是因為你無法用 `list[2]` 來取得列表中第 2 個節點. 如果你不是已經獲得該節點的指標, 你就必須要從 `head` 開始一個一個找到下一個節點的指標. (或從 `tail` 開始一一的往前一個節點走訪).
+
+但是一但你有某個節點的指標, 在做插入和刪除是非常快速的. 只有在找節點的步驟上是比較慢的.
+
+這表示當你在處理鏈結列表時, 你應該盡可能地將元素插入到列表的前方. 這是個 **O(1)** 的操作. 當然如果你都從 `tail` 開始尋找, 那你就應該把元素插入到列表的後方.
+
+<!--
 ## Singly vs doubly linked lists
 
 A singly linked list uses a little less memory than a doubly linked list because it doesn't need to store all those `previous` pointers.
@@ -43,16 +74,38 @@ A singly linked list uses a little less memory than a doubly linked list because
 But if you have a node and you need to find its previous node, you're screwed. You have to start at the head of the list and iterate through the entire list until you get to the right node.
 
 For many tasks, a doubly linked list makes things easier.
+-->
 
+## 單向 vs 雙向 鏈結列表
+
+單向鏈結列表因為不需要儲存 `前一個` 節點的指標, 所以使用較少的記憶體資源.
+
+但如果你有某一個節點你需要知道他前一個節點, 你就爆炸了. 你需要從頭開始走訪整個列表直到你找到正確的節點.
+
+大部分的任務中, 雙向的鏈結列表會讓事情變得比較簡單.
+
+<!--
 ## Why use a linked list?
 
 A typical example of where to use a linked list is when you need a [queue](../Queue/). With an array, removing elements from the front of the queue is slow because it needs to shift down all the other elements in memory. But with a linked list it's just a matter of changing `head` to point to the second element. Much faster.
 
 But to be honest, you hardly ever need to write your own linked list these days. Still, it's useful to understand how they work; the principle of linking objects together is also used with [trees](../Tree/) and [graphs](../Graph/).
+-->
 
+## 為什麼要使用鏈結列表?
+
+有個典型要使用鏈結列表的例子是當你需要一個 [佇列](../Queue/). 對於陣列來說, 要移除陣列前端的元素是相對慢的, 因為這的操作要移動其他元素在記憶體中的位置. 但使用鏈結列表, 只需要讓 `head` 指向第二個節點就好了. 快多了!
+
+但老實說, 現在你也很少會自己去撰寫鏈結列表. 不過, 了解它是怎麼運作, 還是非常有用的; 把物件連結起來的原理還有 [樹](../Tree/) 和 [圖](../Graph/)
+
+<!--
 ## The code
 
 We'll start by defining a type to describe the nodes:
+-->
+## 程式碼
+
+我們從定義節點開始:
 
 ```swift
 public class LinkedListNode<T> {
@@ -65,7 +118,7 @@ public class LinkedListNode<T> {
   }
 }
 ```
-
+<!--
 This is a generic type, so `T` can be any kind of data that you'd like to store in the node. We'll be using strings in the examples that follow.
 
 Ours is a doubly-linked list and each node has a `next` and `previous` pointer. These can be `nil` if there are no next or previous nodes, so these variables must be optionals. (In what follows, I'll point out which functions would need to change if this was just a singly- instead of a doubly-linked list.)
@@ -73,6 +126,16 @@ Ours is a doubly-linked list and each node has a `next` and `previous` pointer. 
 > **Note:** To avoid ownership cycles, we declare the `previous` pointer to be weak. If you have a node `A` that is followed by node `B` in the list, then `A` points to `B` but also `B` points to `A`. In certain circumstances, this ownership cycle can cause nodes to be kept alive even after you deleted them. We don't want that, so we make one of the pointers `weak` to break the cycle.
 
 Let's start building `LinkedList`. Here's the first bit:
+-->
+
+這是一個泛型的型別, `T` 可以是任何一種資料型別, 就看你想要的節點是哪種型別的. 接下來我們將使用字串來當例子.
+
+我們使用雙向鏈結列表, 每個節點有 `next` 和 `previous` 的指標. 它們有可能是 `nil`, 所以變數必須宣告為 optional. (下面我會指出如果使用單向鏈結列表了話, 哪些函式需要改變.)
+
+> **注意:** 為了避免所有權相互參考, 我們將 `previous` 指標設為 weak. 如果你有個 `A` 節點後面接 `B`, 那 `A` 會有個指標變數指向 `B`, `B` 也會有指標變數指向 `A`. 這種情況, 會導致節點被刪除後還是不會被釋放. 我們不想那樣, 所以我們將其中一個指標定為 `weak` 來避免這種情況.
+
+讓我們建立一個 `LinkedList`:
+
 
 ```swift
 public class LinkedList<T> {
