@@ -1,5 +1,6 @@
-# Merge Sort
+# Merge Sort (合併排序)
 
+<!--
 Goal: Sort an array from low to high (or high to low)
 
 Invented in 1945 by John von Neumann, merge sort is a fairly efficient sorting algorithm with a best, worst, and average time complexity of **O(n log n)**.
@@ -12,7 +13,20 @@ Assume you're given an array of *n* numbers and you need to put them in the righ
 - Split the pile into 2. Now you have **two unsorted piles** of numbers.
 - Keep splitting the resulting piles until you can't split anymore. In the end, you will have *n* piles with 1 number in each pile.
 - Begin to **merge** the piles together by sequentially pairing a pile with another pile. During each merge, you put the contents in sorted order. This is fairly easy because each individual pile is already sorted.
+-->
 
+目標: 將陣列做遞減或遞增排序
+
+1945 年由 John von Neumann 發明, 合併排序在最好, 最糟, 和平均, 在時間上都是 **O(n log n)**.
+
+合併排序背後的概念是 **分裂與征服**: 將一個大問題分割成很多個小問題, 去解決每個小問題而不是一次性的處理大問題. 我想合併排序就像是 **先分裂** 然後 **再合併**.
+
+- 把數字放到管線中. 管線是無序的.
+- 把管線一分為二. 現在你有 **兩個無序的管線**.
+- 持續的分割管線直到你無法在分割為止. 最後, 你會有 *n* 個管線, 而每個管線只有一個元素.
+- 開始將管線依照順序和另一個管線做 *合併*. 每次合併, 你會將內容排序. 因為每個做過合併的管線都是有序的, 所以每次合併滿容易的.
+
+<!--
 ## An example
 
 ### Splitting
@@ -26,7 +40,22 @@ Focus on the left pile. `[2, 1]` will split into `[2]` and `[1]`. Can you keep s
 `[5, 4, 9]` splits to `[5]` and `[4, 9]`. Unsurprisingly, `[5]` can't be split anymore, but `[4, 9]` splits into `[4]` and `[9]`. 
 
 The splitting process ends with the following piles: `[2]` `[1]` `[5]` `[4]` `[9]`. Notice that each pile consists of just one element.
+-->
 
+## 一個範例
+### 分割
+
+讓我們假設要排序的陣列是 `[2, 1, 5, 4, 9]`. 這是你的未排序管線. 目的是一直對半分割到不能分割為止.
+
+首先, 先把陣列分成兩半: `[2, 1]` 和  `[5, 4, 9]`. 還可繼續分割嗎? 當然可以!
+
+先處理左邊的管線. `[2, 1]` 會分割成 `[2]` 和 `[1]`. 還可繼續分割嗎? 不. 是時候分割另一個管線了.
+
+`[5, 4, 9]` 分割成 `[5]` 和 `[4, 9]`. 不意外的, `[5]` 不能再分割了, 但是 `[4, 9]` 還可以分割成 `[4]` 和 `[9]`.
+
+這個分割的程序持續到管線變成這樣: `[2]` `[1]` `[5]` `[4]` `[9]`. 注意到每個管線中只有一個元素.
+
+<!--
 ### Merging
 
 Now that you've split the array, you'll **merge** the piles together **while sorting them**. Remember, the idea is to solve many small problems rather than a big one. For each merge iteration you'll only be concerned at merging one pile with another.
@@ -40,6 +69,21 @@ You're left with only two piles and `[9]` finally gets its chance to merge, resu
 ## Top-down implementation
 
 Here's what merge sort may look like in Swift:
+-->
+
+### 合併
+
+現在你有分割後的陣列了, 你要邊 **排序** 邊 **合併** 他們. 記住, 概念是解決每個小問題, 而不是一次處理一個大問題. 每次合併迭代只會考慮將一個管線和另一個管線合併.
+
+給定管線 `[2]` `[1]` `[5]` `[4]` `[9]`, 一開始會合併成 `[1, 2]` 和 `[4, 5]` 和 `[9]`. 因為 `[9]` 是目前唯一單一元素的.
+
+下一步要合併 `[1, 2]` 和 `[4, 5]`. 這會得到 `[1, 2, 4, 5]` 和 `[9]`.
+
+最後只剩下兩個管線, `[9]` 終於有機會合併了, 最後得到 `[1, 2, 4, 5, 9]`.
+
+## 以上實作
+
+這是合併排序在 Swift 中的實作:
 
 ```swift
 func mergeSort(_ array: [Int]) -> [Int] {
@@ -55,6 +99,7 @@ func mergeSort(_ array: [Int]) -> [Int] {
 }
 ```
 
+<!--
 A step-by-step explanation of how the code works:
 
 1. If the array is empty or only contains a single element, there's no way to split it into smaller pieces. You'll just return the array.
@@ -68,6 +113,12 @@ A step-by-step explanation of how the code works:
 5. Finally, merge all the values together, making sure that it's always sorted.
 
 Here's the merging algorithm:
+-->
+
+一步一步的解釋程式碼如何運作:
+
+1. 如果陣列是空的或只包含一個元素, 那不需要做分割. 直接回傳該陣列.
+2. 
 
 ```swift
 func merge(leftPile: [Int], rightPile: [Int]) -> [Int] {
