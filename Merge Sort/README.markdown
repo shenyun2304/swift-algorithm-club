@@ -118,7 +118,11 @@ Here's the merging algorithm:
 一步一步的解釋程式碼如何運作:
 
 1. 如果陣列是空的或只包含一個元素, 那不需要做分割. 直接回傳該陣列.
-2. 
+2. 使用前一步得到的中間索引, 遞迴的分割左邊的陣列
+3. 一樣的, 遞迴的分割右側的陣列
+4. 最後, 合併所有的值, 並確保合併後的陣列必定要是有序的.
+
+以下是合併演算法:
 
 ```swift
 func merge(leftPile: [Int], rightPile: [Int]) -> [Int] {
@@ -160,6 +164,7 @@ func merge(leftPile: [Int], rightPile: [Int]) -> [Int] {
 }
 ```
 
+<!--
 This method may look scary but it is quite straightforward:
 
 1. You need two indexes to keep track of your progress for the two arrays while merging.
@@ -171,24 +176,47 @@ This method may look scary but it is quite straightforward:
 4. If control exits from the previous while loop, it means that either `leftPile` or `rightPile` has its contents completely merged into the `orderedPile`. At this point, you no longer need to do comparisons. Just append the rest of the contents of the other array until there's no more to append.
 
 As an example of how `merge()` works, suppose that we have the following piles: `leftPile = [1, 7, 8]` and `rightPile = [3, 6, 9]`. Note that each of these piles is individually sorted already -- that is always true with merge sort. These are merged into one larger sorted pile in the following steps:
+-->
+
+這個方法看起來挺嚇人, 但是其實滿直觀的:
+
+1. 你需要兩個索引來追蹤合併中兩個陣列的進度.
+2. 這個合併後的陣列, 目前是空的, 你會一步一步地把元素插入到此陣列中.
+3. 這個 while 迴圈會兩兩比對左半和右半元素, 然後把元素插入到 `orderedPile`, 並確保插入後是有序的.
+4. 如果跳出了前一個迴圈, 表示 `leftPile` 或 `rightPile` 至少有一個內的元素已經完全轉移到 `orderedPile` 中了. 此時, 你不需要再做元素比對, 只需要單純的把剩下來的元素插入到有序陣列中.
+
+一個範例展示 `merge()` 動作流程, 假設我們有以下管線: `leftPile = [1, 7, 8]` 和 `rightPile = [3, 6, 9]`. 注意到每個管線個別都已經排序了 -- 在合併排序中這是常有的狀況. 這兩個管線合併到一個大的有序陣列依照以下步驟:
 
 	leftPile       rightPile       orderedPile
 	[ 1, 7, 8 ]    [ 3, 6, 9 ]     [ ]
       l              r
 
+<!--
 The left index, here represented as `l`, points at the first item from the left pile, `1`. The right index, `r`, points at `3`. Therefore, the first item we add to `orderedPile` is `1`. We also move the left index `l` to the next item.
+-->
+左邊的索引以 `l` 代表, 現在指向左管線的第一個位置, `1`. 右邊索引以 `r` 代表, 指向 `3`. 因此, 我們第一個加入到 `orderedPile` 的元素是 `1`. 然後把 `l` 往前一個位置.
+
 
 	leftPile       rightPile       orderedPile
 	[ 1, 7, 8 ]    [ 3, 6, 9 ]     [ 1 ]
       -->l           r
 
+<!--
 Now `l` points at `7` but `r` is still at `3`. We add the smallest item to the ordered pile, so that's `3`. The situation is now:
+-->
+
+現在 `l` 指向 `7`, 而 `r` 還是指向 `3`. 我們要將最小的元素插入有序管線中, 所以這次選 `3`. 那現在情況是這樣:
 
 	leftPile       rightPile       orderedPile
 	[ 1, 7, 8 ]    [ 3, 6, 9 ]     [ 1, 3 ]
          l           -->r
 
+<!--
 This process repeats. At each step we pick the smallest item from either `leftPile` or `rightPile` and add it to `orderedPile`:
+-->
+
+這個流程持續重複. 在每個步驟中我們都在 `leftPile` 和 `rightPile` 中選取最小的元素然後插入到 `orderedPile`:
+
 
 	leftPile       rightPile       orderedPile
 	[ 1, 7, 8 ]    [ 3, 6, 9 ]     [ 1, 3, 6 ]
@@ -202,15 +230,30 @@ This process repeats. At each step we pick the smallest item from either `leftPi
 	[ 1, 7, 8 ]    [ 3, 6, 9 ]     [ 1, 3, 6, 7, 8 ]
             -->l           r
 
+<!--
 Now there are no more items in the left pile. We simply add the remaining items from the right pile, and we're done. The merged pile is `[ 1, 3, 6, 7, 8, 9 ]`. 
 
 Notice that this algorithm is very simple: it moves from left-to-right through the two piles and at every step picks the smallest item. This works because we guarantee that each of the piles is already sorted.
+-->
 
+現在左邊管線已經沒東西了. 接下來簡單的把右邊管線的元素插入到有序管線中, 就完成了. 合併後的管線是 `[ 1, 3, 6, 7, 8, 9]`.
+
+注意到這個演算法非常簡單: 兩個管線從左到右一個一個元素走訪並比對較小的. 當然這樣保證可以成功是因為兩個管線本身都已經是有序的.
+
+<!--
 ## Bottom-up implementation
 
 The implementation of merge sort you've seen so far is called "top-down" because it first splits the array into smaller piles and then merges them. When sorting an array (as opposed to, say, a linked list) you can actually skip the splitting step and immediately start merging the individual array elements. This is called the "bottom-up" approach.
 
 Time to step up the game a little. :-) Here is a complete bottom-up implementation in Swift:
+-->
+
+## 由下至上實作
+
+上面看到合併排序的實作是 "由上至下" 的, 因為它是先將陣列分割成小的管線然後合併他們. 當在排序陣列的時候, 你其實可以跳過分割的步驟直接進入合併每個元素. 這稱為 "由下至上".
+
+是時候來玩玩這個遊戲. 這是完整的 "由下至上" 在 Swift 中的實作:
+
 
 ```swift
 func mergeSortBottomUp<T>(_ a: [T], _ isOrderedBefore: (T, T) -> Bool) -> [T] {
@@ -262,7 +305,7 @@ func mergeSortBottomUp<T>(_ a: [T], _ isOrderedBefore: (T, T) -> Bool) -> [T] {
   return z[d]
 }
 ```
-
+<!--
 It looks a lot more intimidating than the top-down version but notice that the main body includes the same three `while` loops from `merge()`.
 
 Notable points:
@@ -280,12 +323,28 @@ Notable points:
 This function is generic, so you can use it to sort any type you desire, as long as you provide a proper `isOrderedBefore` closure to compare the elements.
 
 Example of how to use it:
+-->
+
+看起來比由上至下還恐怖, 但是主體還是一樣的三個 `while` 迴圈.
+
+值得注意的幾點:
+
+1. 合併排序需要一個暫存的陣列, 因為你無法同時合併和覆寫左邊和右邊管線的元素. 但是每次合併都要配置新的陣列空間挺浪費. 因此, 我們使用兩個暫存的陣列, 然後用變數 `d` 來切換他們, `d` 只會是 0 或 1. 而陣列 `z[d]` 是用來讀取, `z[1 - d]` 是用來寫入. 這稱為 *雙重緩衝*.
+2. 概念上, 由下至上的版本和由上至下是一樣的. 首先, 它將最小的單元素管線合併, 然後再將雙元素管線合併, 然後四元素管線, 以此類推. 管線大小以 `width` 變數來掌握. 初始時, `width` 是 `1` 但是在每個迴圈結尾我們將它乘以 2. 所以外部迴圈決定了要合併管線的大小. 每次迭代, 要合併的子陣列就越來越大.
+3. 內部迴圈走訪管線然後將它們合併成更大的管線. 合併結果是寫入到 `z[1 - d]`.
+4. 這部分跟由上至下版本的邏輯是一樣的. 不同的地方是我們使用了雙重緩衝, 所以是從 `z[d]` 中讀取資料, 然後寫入到 `z[1 - d]`. 它也使用了 `isOrderedBefore` 函式來比較兩個元素的大小, 這讓合併排序更泛型, 你可以排序任何型態的物件.
+5. 至此, 從 `z[d]` 裡面 `width` 大小的陣列已經合併到 `z[1 - 2]` 中 `width * 2` 大小的陣列中. 在這連我們交換了進行中的陣 (變換 `d`), 讓我們下個階段可以讀取我們建立的新管線.
+
+此函式是泛型的, 所以你可以將它用於任何型態得資料, 只要你實作適當的 `isOrderedBefore` 閉包去比較元素.
+
+使用範例:
 
 ```swift
 let array = [2, 1, 5, 4, 9]
 mergeSortBottomUp(array, <)   // [1, 2, 4, 5, 9]
 ```
 
+<!--
 ## Performance
 
 The speed of merge sort is dependent on the size of the array it needs to sort. The larger the array, the more work it needs to do. 
@@ -297,9 +356,25 @@ Therefore, the time complexity for the best, worst, and average case will always
 A disadvantage of merge sort is that it needs a temporary "working" array equal in size to the array being sorted. It is not an **in-place** sort, unlike for example [quicksort](../Quicksort/).
 
 Most implementations of merge sort produce a **stable** sort. This means that array elements that have identical sort keys will stay in the same order relative to each other after sorting. This is not important for simple values such as numbers or strings, but it can be an issue when sorting more complex objects.
+-->
 
+## 表現
+
+合併排序的速度和陣列的大小有關. 陣列越大, 那就會要做越久.
+
+一開始的陣列有沒有排序過並沒有影響合併的速度, 因為你一樣會做分割跟比對的動作.
+
+因此, 時間複雜度在最好, 最糟, 跟平均的狀況下都是 **O(n log n)**.
+
+合併排序的一個缺點是它需要一個和最後有序陣列大小相同的暫存陣列. 它不是個 **內部排序**, 和 [快速排序](../Quicksort/) 不太一樣.
+
+大部分合併排序的實作都是 **穩定** 排序. 意思是元素有唯一順序識別了話, 那排序後每個元素之間都能保持該順序. 這對簡單的值不太重要, 像是字串或數值, 但是對複雜的物件來說, 就是個課題.
+
+<!--
 ## See also
+-->
 
+## 相關閱讀
 [Merge sort on Wikipedia](https://en.wikipedia.org/wiki/Merge_sort)
 
 *Written by Kelvin Lau. Additions by Matthijs Hollemans.*
