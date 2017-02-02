@@ -1,13 +1,22 @@
-# Run-Length Encoding (RLE)
+# Run-Length Encoding (RLE) (變動長度編碼)
 
+<!--
 RLE is probably the simplest way to do compression. Let's say you have data that looks like this:
+-->
+
+RLE 可能是壓縮最簡單的方法. 假設我們的資料長這樣 ：
 
 	aaaaabbbcdeeeeeeef...
 	
+<!--
 then RLE encodes it as follows:
+-->
+
+RLE 編碼完後變這樣:
 
 	5a3b1c1d7e1f...
 
+<!--
 Instead of repeating bytes, you first write how often that byte occurs and then the byte's actual value. So `5a` means `aaaaa`. If the data has a lot of "byte runs", that is lots of repeating bytes, then RLE can save quite a bit of space. It works quite well on images.
 
 There are many different ways you can implement RLE. Here's an extension of `NSData` that does a version of RLE inspired by the old [PCX image file format](https://en.wikipedia.org/wiki/PCX).
@@ -21,6 +30,20 @@ The rules are these:
 - A single byte in the range 192 - 255 is represented by two bytes: first the byte 192 (meaning a run of 1 byte), followed by the actual value.
 
 Here is the compression code. It returns a new `NSData` object containing the run-length encoded bytes:
+-->
+
+相較於重複字元, 先寫入該字元發生次數, 然後再寫入該字元的值. 
+所以 `5a` 表示 `aaaaa`. 如果資料有很多連續重複的字元, 那 RLE 可以節省很大一筆空間. 在圖片上也可以.
+
+有很多方法可以實現 RLE. 受到舊 [PCX 圖檔規格](https://en.wikipedia.org/wiki/PCX) 的啟發, 這邊用 `NSData` 的擴充來實作. 
+
+規則如下:
+
+- 每一個在同一列重複發生的字元, 用兩個 byte 來壓縮: 第一個 byte 紀錄重複次數, 第二個 byte 紀錄該字元值. 第一個 byte 儲存格式是 `191 + count`. 這表示要被編碼的 byte 不能超過 64 個.
+- 單一 byte 重複次數在 0 - 191 之間, 不進行壓縮, 直接複製原始值.
+- 單一 byte 重複次數在 192 - 255 之間 用兩個 byte 來表示: 第一個 byte 是 192 (表示重複 1 個 byte), 後面跟隨著字元 byte 值.
+
+這裡是壓縮的程式碼. 回傳新的 `NSData` 包含變動長度編碼:
 
 ```swift
 extension NSData {
@@ -55,6 +78,7 @@ extension NSData {
 }
 ```
 
+<!--
 How it works:
 
 1. We use an `UnsafePointer` to step through the bytes of the original `NSData` object.
@@ -66,6 +90,16 @@ How it works:
 4. The third possibility is that we've read a single byte < 192. That simply gets copied to the output verbatim.
 
 You can test it like this in a playground:
+-->
+
+運作流程:
+
+1. 使用 `UnsafePointer` 走訪原本 `NSData` 物件的每個 byte.
+2. 這個時候讀取當前的 byte 值到 `byte` 變數裡. 如果下一個 byte 是相同的, 就持續讀取值到不同的 byte 值, 或者到達資料結尾. 或者在讀取 64 個 byte 後也停止, 因為那是我們可以壓縮的最大值.
+3. 這裡我們決定如何將剛剛讀取的資料編碼. 第一種可能是讀取超過 2 或更多 byte (最多到 64 個). 這種情況我們就寫入兩個 byte: 發生次數和字元 byte 值. 但也有可能我們讀取到一個 byte 但是其值 >= 192. 這種情況也寫入兩個 byte.
+4. 第三種可能是讀取到單一 byte < 192. 那樣了話就直接寫入該字元 byte 值.
+
+你可以在 playground 中測試看看:
 
 ```swift
 let originalString = "aaaaabbbcdeeeeeeef"
@@ -73,7 +107,11 @@ let utf8 = originalString.dataUsingEncoding(NSUTF8StringEncoding)!
 let compressed = utf8.compressRLE()
 ```
 
+<!--
 The compressed `NSData` object should be `<c461c262 6364c665 66>`. Let's decode that by hand to see what has happened:
+-->
+
+壓縮後的 `NSData` 物件應該是 `<c461c262 6364c665 66>`. 然後我解開來看發生什麼事:
 
 	c4    This is 196 in decimal. It means the next byte appears 5 times.
 	61    The data byte "a".
@@ -85,9 +123,13 @@ The compressed `NSData` object should be `<c461c262 6364c665 66>`. Let's decode 
 	65    The data byte "e".
 	66    The data byte "f". Appears just once.
 
+<!--
 So that's 9 bytes encoded versus 18 original. That's a savings of 50%. Of course, this was only a simple test case... If you get unlucky and there are no byte runs at all in your original data, then this method will actually make the encoded data twice as large! So it really depends on the input data.
 
 Here is the decompression code:
+-->
+
+所以總共 9 個位元組對上原本的 18 個位元組. 省了 50% 的空間. 當然, 這只是簡單的測試... 如果你運氣不好加上沒有重複的字元, 那這個方法會把資料變的兩倍大! 所以這真的很看輸入的資料狀況.
 
 ```swift
   public func decompressRLE() -> NSData {
