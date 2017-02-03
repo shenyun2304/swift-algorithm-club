@@ -129,7 +129,9 @@ So that's 9 bytes encoded versus 18 original. That's a savings of 50%. Of course
 Here is the decompression code:
 -->
 
-所以總共 9 個位元組對上原本的 18 個位元組. 省了 50% 的空間. 當然, 這只是簡單的測試... 如果你運氣不好加上沒有重複的字元, 那這個方法會把資料變的兩倍大! 所以這真的很看輸入的資料狀況.
+所以總共 9 個位元組對上原本的 18 個位元組. 省了 50% 的空間. 當然, 這只是簡單的測試... 如果你運氣不好加上沒有重複的字元, 那這個方法會把資料變的兩倍大! 所以這真的要看輸入資料的狀況.
+
+這邊是解壓縮的程式碼:
 
 ```swift
   public func decompressRLE() -> NSData {
@@ -159,6 +161,7 @@ Here is the decompression code:
   }
 ```
 
+<!--
 1. Again this uses an `UnsafePointer` to read the `NSData`. Here we read the next byte; this is either a single value less than 192, or the start of a byte run.
 
 2. If it's a single value, then it's just a matter of copying it to the output.
@@ -166,16 +169,31 @@ Here is the decompression code:
 3. But if the byte is the start of a run, we have to first read the actual data value and then write it out repeatedly.
 
 To turn the compressed data back into the original, you'd do:
+-->
+
+1. 使用 `UnsafePointer` 來讀取 `NSData`. 這邊我們讀取一個 byte; 它有可能小於 192 或開始重複字元.
+2. 當重複字元開始時, 先讀取該字元 byte 值 (`value`) 然後重複的寫入該值.
+
+要把壓縮後的資料解壓縮, 可以這樣做:
+
 
 ```swift
 let decompressed = compressed.decompressRLE()
 let restoredString = String(data: decompressed, encoding: NSUTF8StringEncoding)
 ```
 
+<!--
 And now `originalString == restoredString` must be true!
 
 Footnote: The original PCX implementation is slightly different. There, a byte value of 192 (0xC0) means that the following byte will be repeated 0 times. This also limits the maximum run size to 63 bytes. Because it makes no sense to store bytes that don't occur, in my implementation 192 means the next byte appears once, and the maximum run length is 64 bytes.
 
 This was probably a trade-off when they designed the PCX format way back when. If you look at it in binary, the upper two bits indicate whether a byte is compressed. (If both bits are set then the byte value is 192 or more.) To get the run length you can simply do `byte & 0x3F`, giving you a value in the range 0 to 63. 
+-->
+
+現在 `originalString == restoredString` 一定是 true!
+
+備註: 原始的 PCX 實作有點不同. 在 byte 值 192 (0xC0) 的時候表示接下來的 byte 將重複 0 次. 這也將最大重複次數縮小到 63 次. 因為實在沒道理去儲存一個沒發生的 byte, 所以在這邊的實作 192 表示下一個 byte 發生 1 次, 而最大重複次數是 64 次.
+
+這可能是在設計 PCX 規格時的一個交易. 如果詳細看二進位碼, 最高的兩個位元表示該 byte 值是否是被壓縮的. (如果兩個位元都是 1 表示該 byte 值是 192 以上.) 要拿到重複次數你可以簡單的執行 `byte & 0x3F`, 會給你 0 到 63 的值.
 
 *Written for Swift Algorithm Club by Matthijs Hollemans*
