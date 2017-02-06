@@ -291,9 +291,14 @@ Maybe you're not convinced yet... What if we always got 0.999 as the random valu
 	2 * 0.999 = 1.998     is this less than 2? YES
 	1 * 0.999 = 0.999     is this less than 1? YES
 
+<!--
 It always works! But does this mean that elements closer to the end of the array have a higher probability of being chosen than those in the beginning? Nope, all elements are equally likely to be selected. (Don't take my word for it: see the playground for a quick test that shows this in practice.)
 
 Here's an example of how to test this algorithm:
+-->
+
+此方法一定會成功! 但是這表示越接近尾端的元素會比前端的元素還容易選取嗎? 不, 所有元素被選取的機率是相同的. (別只是看看這邊寫的; 到 playground 裡快速的測試一下吧.)
+
 
 ```swift
 let input = [
@@ -309,10 +314,19 @@ print(output)
 print(output.count)
 ```
 
+<!--
 The performance of this second algorithm is **O(n)** as it may require a pass through the entire input array.
 
 > **Note:** If `k > n/2`, then it's more efficient to do it the other way around and choose `k` items to remove.
 
 Based on code from Algorithm Alley, Dr. Dobb's Magazine, October 1993.
+-->
+
+
+這個第二個演算法的時間複雜度是 **O(n)**, 因為它有可能會走訪整個陣列.
+
+> **注意:** 如果 `k > n/2`, 那反過來選取要移除的元素會更有效率.
+
+程式碼基礎源於 1993 年 Dr. Dobb's 雜誌 Algorithm Alley 專欄.
 
 *Written for Swift Algorithm Club by Matthijs Hollemans*
