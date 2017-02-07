@@ -206,6 +206,14 @@ Mike Bostock has a [great visualization](http://bost.ocks.org/mike/shuffle/) of 
 
 這會回傳類似 `[3, 0, 9, 1, 8, 5, 2, 6, 7, 4]` 的陣列. 可以看到, 所有的數字都介於 0 到 10 之間, 而且是無序的. 當然如果你自己嘗試了話順序會不同.
 
-`shuffledArray()` 函式先建立了含有 `n` 個 0 的陣列. 然後迭代 `n` 次, 每次迭代將迭代數覆寫到一個隨機的位置. 這樣的做法可以保證這些元素不會被
+`shuffledArray()` 函式先建立了含有 `n` 個 0 的陣列. 然後迭代 `n` 次, 每次迭代將迭代數覆寫到一個隨機的位置. 有個技巧可以保證這些元素不會被下一個覆蓋, 就是先把上一個元素移開.
+
+這個演算法挺聰明的, 我建議你研究整個範例, 無論是在紙上模擬或是在 playground. (提示: 這一樣把陣列分成兩個區塊)
+
+## 相關閱讀
+
+這些用 Swift 實現的虛擬碼是以此 [Wikipedia 文章](https://en.wikipedia.org/wiki/Fisher–Yates_shuffle) 為基礎.
+
+Mike Bostock 有個針對洗牌演算法 [很棒的視覺化範例](http://bost.ocks.org/mike/shuffle/)
 
 *Written for Swift Algorithm Club by Matthijs Hollemans*
