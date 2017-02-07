@@ -1,5 +1,6 @@
-# Skip List
+# Skip List (跳躍列表)
 
+<!--
 Skip List is a probablistic data-structure  with same logarithmic time bound and
 efficiency  as AVL/  or  Red-Black  tree and  provides  a  clever compromise  to
 efficiently support  search and update  operations and is relatively  simpler to
@@ -21,6 +22,17 @@ For a skip list *S*:
 2.  For lists *{L1, ..., Ln}*, *Li*  contains a randomly generated subset of the
    items in *Li-1*
 3. Height is determined by coin-flipping.
+
+-->
+
+這是一個機率的資料結構, 擁有和 [AVL樹](../AVL Tree/) 或 [紅黑樹](../Red-Black Tree/) 一樣的對數時間複雜度, 搜尋和更新更有效率, 並且比其他資料結構相對簡單簡單.
+
+一個跳躍列表 *S* 是由一些有序的鏈結列表 *{L0, ..., Ln}* 組成的, 階層結構而且在每層 *L* 中都會儲存第 0 層 *L0* 鏈結列表中元素的子集合. 在 *{L1, ... Ln}* 中的元素是以 1/2 的機率從階層 0 中選取的. 就走訪而言, 階層中的元素都擁有到下一個和到下一層節點的參考指標. 每個階層都可以當作到下一層的快速通道, 有效的以跳躍不同階層來減少走訪的距離來優化 O(log n) 搜尋, 在最糟的情況下搜尋降到 O(n), 就像一般的鏈結列表一樣.
+
+對於跳躍列表 *S*:
+
+1. *L0* 含有所有的元素.
+2. 
 
 ![Schematic view](Images/Intro.png)
 Figure 1
