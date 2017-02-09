@@ -421,10 +421,19 @@ How about we do something crazy?  What would happen if we tried to remove
 **9**, the root node?  This is the resulting tree:
 -->
 
-這有一點技巧, 因為 **5** 有一些子節點要處理. 主要概念是用 **5** 的第一個子節點 **2** 來取代它. 為了達到這點, 我們把 **2** 的 `parent` 設為 **9**
+這有一點技巧, 因為 **5** 有一些子節點要處理. 主要概念是用 **5** 的第一個子節點 **2** 來取代它. 為了達到這點, 我們把 **2** 的 `parent` 設為 **9**, 然後把 **9** 的 `left` 子節點設為 **2**. 而 **4** 的 `rightThread` 原本是 **5**, 但現在要把 **5** 移除, 所以需要改變. 到了要了解引線二元樹兩個最重要屬性的時候了:
+
+1. 對任意節點 **n**, 在 `left` 子樹中的最右端節點 **m**, 其 `rightThread` 是 **n**.
+2. 對任意節點 **n**, 在 `right` 子樹中的最左端節點 **m**, 其 `leftThread` 是 **n**
+
+注意到這些屬性在移除 **5** 時是怎樣的運作的, 對於 **4** 來說, 原本是 **5** `left` 子樹最右端的節點. 為了處理這項屬性, 需要將 **4** 的 `rightThread` 設為 **9**, 因為現在 **4** 會是 **9** `left` 子樹中最右端的節點. 接下來要完全移除 **5** 要做的就只剩下把 **5** 的 `parent`, `left`, `right`, `leftThread` 和 `rightThread` 設為 `nil`.
+
+做些瘋狂的事情如何? 如果我們想移除 **9** 會發生什麼事? 這裡是結果:
+
 
 ![Remove3](Images/Remove3.png)
 
+<!--
 Whenever we want to remove a node that has two children, we take a slightly
 different approach than the above examples.  The basic idea is to replace the
 node that we want to remove with the leftmost node in its `right`  subtree,
@@ -444,9 +453,19 @@ variables to `nil`.
 
 In order to illustrate how to remove a node that has only a `right` child,
 we'll remove one final node, **12** from the tree:
+-->
+
+如果要移除的節點有兩個子節點, 處理方式和上述例子有點不同. 基本概念是用要移除節點 `right` 子樹中最左端的節點來取代它. 我們將這個最左端節點稱為替代節點.
+
+> 注意: 當然也可以用 `left` 子樹的最右端節點來當替代節點. 要選用哪個都可以.
+
+一旦我們找到替代節點, 此範例是 **10**, 我們用上述的移除演算法將此點移除. 此動作確保 `right` 子樹關聯正確. 這時候就簡單的用 **10** 取代 **9** 就可以了. 最後的工作就是檢查上述的兩個重要屬性, 以現在的狀況來看 **12** 的 `leftThread` 已經是 **10** 了, 所以 **9** 已經不需要存在了, 所以再將 **9** 的所有變數設為 `nil` 就結束了.
+
+為了要展示移除只有 `right` 子節點的節點, 這是移除 **12** 後的結果:
 
 ![Remove4](Images/Remove4.png)
 
+<!--
 The process to remove **12** is identical to the process we used to remove
 **5**, but mirrored.  **5** had a `left` child, while **12** has a `right`
 child, but the core algorithm is the same.
@@ -456,8 +475,13 @@ work in threaded binary trees, but if you understood these examples, you should
 be able to insert or remove any node from any tree you want.  More detail can
 of course be found in
 [the implementation](ThreadedBinaryTree.swift).
+-->
 
+移除 **12** 的流程和移除 **5** 一樣, 只是左右相反. **5** 有 `left` 子節點, **12** 有 `right` 子節點, 但是核心演算是相同的.
 
+這就是引線二元樹! 這裡快速的瀏覽引線二元樹插入和移除節點的流程, 但如果你已經了解這些例子, 你應該可以插入或移除樹中的任何一個節點. 更詳細的內容請見 [這個實作](ThreadedBinaryTree.swift)
+
+<!--
 ## Miscellaneous methods
 
 There are many other smaller operations that a threaded binary tree can do,
@@ -466,9 +490,18 @@ such as `searching()` for a node in the tree, finding the `depth()` or
 [the implementation](ThreadedBinaryTree.swift) for the full technical details.
 Many of these methods are inherent to binary search trees as well, so you can
 find [further documentation here](../Binary Search Tree/).
+-->
 
+## 其他方法
 
+引線二元樹還可以辦到一些其他的小操作, 像是 `searching()` 節點, 找到節點的 `depth()` 或 `height()`... 等等. 都可以在 [實作](ThreadedBinaryTree.swift) 中找到這些技巧的詳細.
+這些方法有大部分是繼承自二元搜尋樹, 詳細可以參考 [這裡](../Binary Search Tree/).
+
+<!--
 ## See also 
+-->
+
+## 相關閱讀
 
 [Threaded Binary Tree on Wikipedia](https://en.wikipedia.org/wiki/Threaded_binary_tree)
 
