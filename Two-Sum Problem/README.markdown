@@ -1,14 +1,28 @@
-# Two-Sum Problem
+# Two-Sum Problem (兩兩相加問題)
 
+<!--
 You're given an array `a` with numbers. Write an algorithm that checks if there are any two entries in the array that add up to a given number `k`. In other words, is there any `a[i] + a[j] == k`?
 
 There are a variety of solutions to this problem (some better than others). The following solutions both run in **O(n)** time.
+-->
 
+給定一個數值陣列 `a`. 提供一個演算法檢查有沒有元素兩兩相加的和會等於 `k`. 換句話說, 有沒有 `a[i] + a[j] == k`?
+
+這個問題有很多種解法. 下列兩種解法的時間複雜度都是 **O(n)**.
+
+<!--
 # Solution 1
 
 This solution uses a dictionary to store differences between each element in the array and the sum `k` that we're looking for. The dictionary also stores the indices of each element.
 
 With this approach, each key in the dictionary corresponds to a new target value. If one of the successive numbers from the array is equal to one of the dictionary's keys, then we know there exist two numbers that sum to `k`.
+-->
+
+## 解法 1
+
+這個解法用字典來儲存陣列中每個元素和 `k` 的差異, 同時也儲存了每個元素的索引.
+
+在這裡, 字典中的每個鍵值對應到一個新的目標值. 如果陣列中的某個數值和字典中的某個鍵值相等, 那就知道存在兩個數值相加會等於 `k`.
 
 ```swift
 func twoSumProblem(_ a: [Int], k: Int) -> ((Int, Int))? {
@@ -26,47 +40,83 @@ func twoSumProblem(_ a: [Int], k: Int) -> ((Int, Int))? {
 }
 ```
 
+<!--
 The `twoSumProblem()` function takes two parameters: the array `a` with the numbers, and `k`, the sum we're looking for. It returns the first set of indices `(i, j)` where `a[i] + a[j] == k`, or `nil` if no two numbers add up to `k`.
 
 Let's take a look at an example and run through the algorithm to see how it works. Given is the array:
+-->
+
+`twoSumProblem()` 函式接收兩個參數: `a` 是數值陣列, `k` 是指定的和. 它會回傳找到的第一組數值的索引元組 `(i, j)`, 其中 `a[i] + a[j] = k`, 或者沒有找到任何配對合格了話則回傳 `nil`.
+
+用例子來看流程是怎樣的吧. 給定以下陣列:
 
 ```swift
 [ 7, 2, 23, 8, -1, 0, 11, 6  ]
 ```
 
+<!--
 Let's find out if there exist two entries whose sum is equal to 10.
 
 Initially, our dictionary is empty. We begin looping through each element:
 
 - **i = 0**: Is `7` in the dictionary? No. We add the difference between the target `k` and the current number to the dictionary. The difference is `10 - 7 = 3`, so the dictionary key is `3`. The value for that key is the current index, `0`. The dictionary now looks like this:
+-->
+
+假設要找有沒有任意兩個數值相加為 10.
+
+初始時, 字典是空的. 走訪每個陣列元素:
+
+- **i = 0**: `7` 有在字典中嗎? 沒有. 把它和 `k` 的差加入到字典中. `10 - 7 = 3`, 所以字典的鍵值是 `3`. 對應的內容直視該元素的索引, 也就是 `0`. 這時候字典像這樣:
 
 ```swift
 [ 3: 0 ]
 ```
-
+<!--
 - **i = 1:** Is `2` in the dictionary? No. Let's do as above and add the difference (`10 - 2 = 8`) and the array index (`1`). The dictionary is:
+-->
+
+- **i = 1**: `2` 有在字典中嗎? 沒有. 像上一步那樣來處理, 把差 (`10 - 2 = 8`) 和元素索引 (`1`) 放到字典裡:
 
 ```swift
 [ 3: 0, 8: 1 ]
 ```
-
+<!--
 - **i = 2:** Is `23` in the dictionary? No. Again, we add it to the dictionary. The difference is `10 - 23 = -13` and the index is `2`:
+-->
+
+- **i = 2**: `23` 在字典中嗎? 沒有. 再一次, 差是 `10 - 23 = -13`, 元素索引是 `2`:
 
 ```swift
 [ 3: 0, 8: 1, -13: 2 ]
 ```
 
+<!--
 - **i = 3:** Is `8` in the dictionary? Yes! That means that we have found a pair of entries that sum to our target. Namely the current number `8` and `array[dict[8]]` because `dict[8] = 1`, `array[1] = 2`, and `8 + 2 = 10`. Therefore, we return the corresponding indices of these numbers. For `8` that is the current loop index, `3`. For `2` that is `dict[8]` or `1`. The tuple we return is `(1, 3)`.
 
 The given array actually has multiple solutions: `(1, 3)` and `(4, 6)`. However, only the first solution is returned.
 
 The running time of this algorithm is **O(n)** because it potentially may need to look at all array elements. It also requires **O(n)** additional storage space for the dictionary.
+-->
 
+- **i = 3**: `8` 在字典中嗎? 有耶! 表示我們找到了一組配對和起來是 10 了. 因為現在的數值是 `8`, 和 `array[dict[8]]`, 而 `dict[8] = 1`, `array[1] = 2`, `8 + 2 = 10`. 因此我們回傳這兩個數值的索引, 以 `8` 來說剛好是當前回權的索引, `3`. 而 `2` 是由 `dict[8]` 來的, 也就是 `1`. 所以回傳的元組是 `(1, 3)`.
+
+雖然說給定的陣列實際上有不只一個解: `(1, 3)` 和 `(4, 6)`. 無論如何, 只有第一個解會被回傳.
+
+這個演算法的時間複雜度是 **O(n)**, 因為他有可能會走訪陣列所有的元素. 而它也需要增加給字典 **O(n)** 的儲存空間.
+
+<!--
 # Solution 2
 
 **Note**: This particular algorithm requires that the array is sorted, so if the array isn't sorted yet (usually it won't be), you need to sort it first. The time complexity of the algorithm itself is **O(n)** and, unlike the previous solution, it does not require extra storage. Of course, if you have to sort first, the total time complexity becomes **O(n log n)**. Slightly worse but still quite acceptable.
 
 Here is the code in Swift:
+-->
+
+## 解法 2
+
+**注意:** 這個演算法需要陣列是有序狀態的, 所以如果陣列尚未排序 (通常呢, 是不會排序的), 你會需要先做排序操作. 這個演算法本身的時間複雜度是 **O(n)**, 不過跟上一個不同的事, 它不需要增加儲存空間. 當然, 如果要把排序的時間算進去, 那整個動作的時間複雜度就會是 **O(n log n)**. 比較糟但還可以接受.
+
+程式碼:
 
 ```swift
 func twoSumProblem(_ a: [Int], k: Int) -> ((Int, Int))? {
@@ -87,9 +137,13 @@ func twoSumProblem(_ a: [Int], k: Int) -> ((Int, Int))? {
 }
 ```
 
+<!--
 As in the first solution, the `twoSumProblem()` function takes as parameters the array `a` with the numbers and `k`, the sum we're looking for. If there are two numbers that add up to `k`, the function returns a tuple containing their array indices. If not, it returns `nil`. The main difference is that `a` is assumed to be sorted.
 
 To test it, copy the code into a playground and add the following:
+-->
+
+在解法 1 中,
 
 ```swift
 let a = [2, 3, 4, 4, 7, 8, 9, 10, 12, 14, 21, 22, 100]
