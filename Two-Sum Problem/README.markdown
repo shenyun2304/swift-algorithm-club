@@ -143,7 +143,9 @@ As in the first solution, the `twoSumProblem()` function takes as parameters the
 To test it, copy the code into a playground and add the following:
 -->
 
-在解法 1 中,
+和解法 1 相同, `twoSumProblem()` 函式接受兩個參數, 數值陣列 `a` 和指定總和 `k`. 如果有兩個數值和為 `k`, 此函式回傳該兩個數值索引的元組. 如果沒有找到, 回傳 `nil`. 主要的差異在於這裡的 `a` 是有序的.
+
+複製這段程式碼在 playground 中試試看:
 
 ```swift
 let a = [2, 3, 4, 4, 7, 8, 9, 10, 12, 14, 21, 22, 100]
@@ -152,54 +154,99 @@ if let (i, j) = twoSumProblem(a, k: 33) {
 }
 ```
 
+<!--
 This returns the tuple `(8, 10)` because `a[8] = 12` and `a[10] = 21`, and together they add up to `33`.
 
 So how does this algorithm work? It takes advantage of the array being sorted. That's true for many algorithms, by the way. If you first sort the data, it's often easier to perform your calculations.
 
 In the example, the sorted array is:
+-->
+
+回傳 `(8, 10)`, 因為 `a[8] = 12`, `a[10] = 21`, 加起來是 `33`.
+
+所以這個演算法是怎麼運作的? 首先它的的優勢在於傳入的陣列是有序的. 這點在很多演算法中是真實的, 順帶一提. 如果你先將資料排序, 通常在計算上都會比較容易.
+
+在此例中, 排序後的陣列為:
 
 	[ 2, 3, 4, 4, 7, 8, 9, 10, 12, 14, 21, 22, 100 ]
 
+<!--
 The algorithm uses the two variables `i` and `j` to point to the beginning and end of the array, respectively. Then it increments `i` and decrements `j` until the two meet. While it's doing this, it checks whether `a[i]` and `a[j]` add up to `k`.
 
 Let's step through this. Initially, we have:
+-->
+
+此演算法使用兩個變數 `i` 和 `j` 來指向陣列的起頭和結尾索引. 然後遞增 `i` 和遞減 `j` 直到兩數相遇. 在這之中, 每一步都會檢查 `a[i]` 和 `a[j]` 之和是否有達到 `k`.
+
+讓我們一步步分解. 初始時, 我們有:
 
 	[ 2, 3, 4, 4, 7, 8, 9, 10, 12, 14, 21, 22, 100 ]
       i                                        j
 
+<!--
 The sum of these two is `2 + 100 = 102`. That's obviously too much, since `k = 33` in this example. There is no way that `100` will ever be part of the answer, so decrement `j`.
 
 We have:
+-->
+
+這兩個數的和是 `2 + 100 = 102`. 這再明顯不過了, 不過因為 `k = 33`. 所以 `100` 絕對不可能是答案之一, 所以遞減 `j`.
 
 	[ 2, 3, 4, 4, 7, 8, 9, 10, 12, 14, 21, 22, 100 ]
       i                                    j
 
+<!--
 The sum is `2 + 22 = 24`. Now the sum is too small. We can safely conclude at this point that the number `2` will never be part of the answer. The largest number on the right is `22`, so we at least need `11` on the left to make `33`. Anything less than `11` is not going to cut it. (This is why we sorted the array!)
 
 So, `2` is out and we increment `i` to look at the next small number.
+-->
+
+這時候和為 `2 + 22 = 24`. 現在和太小了. 我們可以安全的得到此時 `2` 不是答案的結論. 目前最大的數是 `22`, 所以至少也需要 `11` 來跟它組合成 `33`. 任何比 `11` 小的數都能跟 `22` 搭配. (這就是用有序陣列的原因)
+
+所以 `2` 出局了, 我們遞增 `i`:
+
 
 	[ 2, 3, 4, 4, 7, 8, 9, 10, 12, 14, 21, 22, 100 ]
          i                                 j
 
+<!--
 The sum is `3 + 22 = 25`. Still too small, so increment `i` again.
+-->
+
+現在和是 `3 + 22 = 25`. 還是太小, 所以遞增 `i`:
 
 	[ 2, 3, 4, 4, 7, 8, 9, 10, 12, 14, 21, 22, 100 ]
             i                              j
 
+<!--
 In fact, we have to increment `i` a few more times, until we get to `12`:
+-->
+
+事實上, 我們需要連續遞增 `i` 個幾次, 直到我們到達 `12`:
 
 	[ 2, 3, 4, 4, 7, 8, 9, 10, 12, 14, 21, 22, 100 ]
                                i           j
 
+<!--
 Now the sum is `12 + 22 = 34`. It's too high, which means we need to decrement `j`. This gives:
+-->
+
+現在和是 `12 + 22 = 34`. 超過了, 所以表示我們要遞減 `j`:
 
 	[ 2, 3, 4, 4, 7, 8, 9, 10, 12, 14, 21, 22, 100 ]
                                i       j
 
+<!--
 And finally, we have the answer: `12 + 21 = 33`. Yay!
 
 It's possible, of course, that there are no values for `a[i] + a[j]` that sum to `k`. In that case, eventually `i` and `j` will point at the same number. Then we can conclude that no answer exists and we return `nil`.
 
 I'm quite enamored by this little algorithm. It shows that with some basic preprocessing on the input data -- sorting it from low to high -- you can turn a tricky problem into a very simple and beautiful algorithm.
+-->
+
+最後我們終於得到答案 `12 + 21 = 33`. 耶!
+
+當然是有可能陣列中根本沒有組合可以讓 `a[i] + a[j] = k`. 在那種情況下, 最終 `i` 和 `j` 會到達同一個索引, 此時我們就可以得知陣列中沒有符合的組合, 結束迴圈並回傳 `nil`.
+
+我還滿迷戀這個小演算法的. 它展現了如果預先整理資料 -- 做遞增排序 -- 你可以將一個棘手的問題變得很簡單而且很漂亮的演算法.
 
 *Written for Swift Algorithm Club by Matthijs Hollemans and Daniel Speiser*
