@@ -77,11 +77,13 @@ This returns `3`, and so on. If the stack is empty, popping returns `nil` or in 
 這次回傳 `3`，以此類推。如果從一個沒有元素的堆疊中取得元素，將會回傳 `nil` 或者錯誤訊息 ("stack underflow")。
 
 
+
 <!--
-A stack is easy to create in Swift. It's just a wrapper around an array that just lets you push, pop, and peek:
+A stack is easy to create in Swift. It's just a wrapper around an array that just lets you push, pop, and look at the top element of the stack:
 -->
 
 在 swift 中要創建一個堆疊很簡單，只要包覆一個陣列並實現新增、取得移除、取得三種方法:
+
 
 ```swift
 public struct Stack<T> {
@@ -103,7 +105,7 @@ public struct Stack<T> {
     return array.popLast()
   }
 
-  public func peek() -> T? {
+  public var top: T? {
     return array.last
   }
 }

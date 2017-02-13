@@ -117,7 +117,7 @@ Sometimes you don't want to look at just a single node, but at all of them.
 There are three ways to traverse a binary tree:
 
 1. *In-order* (or *depth-first*): first look at the left child of a node, then at the node itself, and finally at its right child.
-2. *Pre-order*: first look at a node, then its left and right children. 
+2. *Pre-order*: first look at a node, then its left and right children.
 3. *Post-order*: first look at the left and right children and process the node itself last.
 
 Once again, this happens recursively.
@@ -127,7 +127,7 @@ If you traverse a binary search tree in-order, it looks at all the nodes as if t
 
 ## 走訪
 
-有時候你想要走訪整棵樹, 並不是特頂某個值.
+有時候你想要走訪整棵樹, 並不是某個節點.
 
 有三種走訪策略:
 
@@ -144,14 +144,11 @@ If you traverse a binary search tree in-order, it looks at all the nodes as if t
 <!--
 ## Deleting nodes
 
+
 Removing nodes is kinda tricky. It is easy to remove a leaf node, you just disconnect it from its parent:
 -->
 
 ## 刪除節點
-
-刪除節點需要一點技巧. 刪除葉節點非常簡單, 直接刪除就好:
-
-![Deleting a leaf node](Images/DeleteLeaf.png)
 
 
 <!--
@@ -163,22 +160,21 @@ If the node to remove has only one child, we can link that child to the parent n
 ![Deleting a node with one child](Images/DeleteOneChild.png)
 
 <!--
-The gnarly part is when the node to remove has two children. To keep the tree properly sorted, we must replace this node by the smallest child that is larger than the node:
+Removing nodes is also easy. After removing a node, we replace the node with either its biggest child on the left or its smallest child on the right. That way the tree is still sorted after the removal. In following example, 10 is removed and replaced with either 9 (Figure 2), or 11 (Figure 3).
 -->
 
-如果要刪除的節點有兩個子節點就比較有趣了. 為了保持樹的有序狀態, 我們將該節點右子樹中最小的葉節點取代該節點:
+刪除其他節點也很簡單. 在移除該節點後, 我們用該節點左子樹中最大的節點或右子樹中最小的節點來取代它的位置. 這樣在移除節點後, 保留樹的有序性. 下面這個例子, 10 被移除了, 而 9 或 11 都可以取代它.
 
 ![Deleting a node with two children](Images/DeleteTwoChildren.png)
 
 <!--
-This is always the leftmost descendant in the right subtree. It requires an additional search of at most **O(h)** to find this child.
-
-Most of the other code involving binary search trees is fairly straightforward (if you understand recursion) but deleting nodes is a bit of a headscratcher.
+Note the replacement needs to happen when the node has at least one child. If it has no child, you just disconnect it from its parent:
 -->
 
-這個點總會是右子樹中最左邊的葉節點. 此操作會需要增加找到這個節點 **O(h)** 的時間.
+注意到取代動作只有在節點有子節點的情況才會發生. 如果是刪除葉節點, 那直接刪除就好:
 
-大部分二元搜尋樹的程式碼是還滿直觀的 ( 如果你瞭解遞迴 ), 但是刪除節點需要多一點腦筋.
+![Deleting a leaf node](Images/DeleteLeaf.png)
+
 
 <!--
 ## The code (solution 1)
@@ -243,8 +239,12 @@ public class BinarySearchTree<T: Comparable> {
   }
 }
 ```
+
 <!--
-This class describes just a single node, not the entire tree. It's a generic type, so the node can store any kind of data. It also has references to its `left` and `right` child nodes and a `parent` node. 
+
+
+This class describes just a single node, not the entire tree. It's a generic type, so the node can store any kind of data. It also has references to its `left` and `right` child nodes and a `parent` node.
+
 
 Here's how you'd use it:
 -->
@@ -279,23 +279,19 @@ A tree node by itself is pretty useless, so here is how you would add new nodes 
 
 ```swift
   public func insert(value: T) {
-    insert(value, parent: self)
-  }
-  
-  private func insert(value: T, parent: BinarySearchTree) {
     if value < self.value {
       if let left = left {
-        left.insert(value, parent: left)
+        left.insert(value: value)
       } else {
         left = BinarySearchTree(value: value)
-        left?.parent = parent
+        left?.parent = self
       }
     } else {
       if let right = right {
-        right.insert(value, parent: right)
+        right.insert(value: value)
       } else {
         right = BinarySearchTree(value: value)
-        right?.parent = parent
+        right?.parent = self
       }
     }
   }
@@ -433,7 +429,7 @@ Here is the implementation of `search()`:
 <!--
 I hope the logic is clear: this starts at the current node (usually the root) and compares the values. If the search value is less than the node's value, we continue searching in the left branch; if the search value is greater, we dive into the right branch.
 
-Of course, if there are no more nodes to look at -- when `left` or `right` is nil -- then we return `nil` to indicate the search value is not in the tree. 
+Of course, if there are no more nodes to look at -- when `left` or `right` is nil -- then we return `nil` to indicate the search value is not in the tree.
 
 > **Note:** In Swift that's very conveniently done with optional chaining; when you write `left?.search(value)` it automatically returns nil if `left` is nil. There's no need to explicitly check for this with an `if` statement.
 
@@ -501,21 +497,21 @@ Remember there are 3 different ways to look at all nodes in the tree? Here they 
 還記得有三種走訪方式嗎? 這裡是他們的實作:
 
 ```swift
-  public func traverseInOrder(@noescape process: T -> Void) {
-    left?.traverseInOrder(process)
+  public func traverseInOrder(process: (T) -> Void) {
+    left?.traverseInOrder(process: process)
     process(value)
-    right?.traverseInOrder(process)
+    right?.traverseInOrder(process: process)
   }
-  
-  public func traversePreOrder(@noescape process: T -> Void) {
+
+  public func traversePreOrder(process: (T) -> Void) {
     process(value)
-    left?.traversePreOrder(process)
-    right?.traversePreOrder(process)
+    left?.traversePreOrder(process: process)
+    right?.traversePreOrder(process: process)
   }
-  
-  public func traversePostOrder(@noescape process: T -> Void) {
-    left?.traversePostOrder(process)
-    right?.traversePostOrder(process)
+
+  public func traversePostOrder(process: (T) -> Void) {
+    left?.traversePostOrder(process: process)
+    right?.traversePostOrder(process: process)
     process(value)
   }
 ```
@@ -559,11 +555,12 @@ You can also add things like `map()` and `filter()` to the tree. For example, he
 
 
 ```swift
-  public func map(@noescape formula: T -> T) -> [T] {
+
+  public func map(formula: (T) -> T) -> [T] {
     var a = [T]()
-    if let left = left { a += left.map(formula) }
+    if let left = left { a += left.map(formula: formula) }
     a.append(formula(value))
-    if let right = right { a += right.map(formula) }
+    if let right = right { a += right.map(formula: formula) }
     return a
   }
 ```
@@ -599,10 +596,11 @@ As an exercise for yourself, see if you can implement filter and reduce.
 
 試試看, 能不能實作 filter 和 reduce.
 
+
 <!--
 ### Deleting nodes
 
-You've seen that deleting nodes can be tricky. We can make the code much more readable by defining some helper functions.
+We can make the code much more readable by defining some helper functions.
 -->
 
 ### 刪除節點
@@ -625,12 +623,15 @@ You've seen that deleting nodes can be tricky. We can make the code much more re
 <!--
 Making changes to the tree involves changing a bunch of `parent` and `left` and `right` pointers. This function helps with that. It takes the parent of the current node -- that is `self` -- and connects it to another node. Usually that other node will be one of the children of `self`.
 
-We also need a function that returns the leftmost descendent of a node:
+
+We also need a function that returns the minimum and maximum of a node:
 -->
 
 樹的變動牽連到一堆節點的 `父節點` 和 `左節點` 和 `右節點`. 這個函式就是在處理這些事情. 先獲得當前節點的父節點, 然後判斷當前節點是左節點還是右節點, 最後讓新的節點取代當前節點的位置. 通常新的節點是當前節點的某個子節點.
 
-我們還需要一個函式來獲得最左邊的葉節點 ( 最小子節點 ):
+我們需要一些函式來獲得節點的最小和最大的子節點:
+
+最小子節點:
 
 ```swift
   public func minimum() -> BinarySearchTree {
@@ -640,6 +641,7 @@ We also need a function that returns the leftmost descendent of a node:
     }
     return node
   }
+
 ```
 
 <!--
@@ -668,9 +670,9 @@ We won't need it for deleting, but for completeness' sake, here is the opposite 
     }
     return node
   }
+
+
 ```
-
-
 <!--
 It returns the rightmost descendent of the node. We find it by following `right` pointers until we get to the end. In the above example, the rightmost descendent of node `2` is `5`. The maximum value in the entire tree is `11`, because that is the rightmost descendent of the root node `6`.
 
@@ -681,24 +683,31 @@ Finally, we can write the code that removes a node from the tree:
 
 最後, 我們可以得到刪除節點的程式碼:
 
+
 ```swift
-  public func remove() -> BinarySearchTree? {
+  @discardableResult public func remove() -> BinarySearchTree? {
     let replacement: BinarySearchTree?
 
-    if let left = left {
-      if let right = right {
-        replacement = removeNodeWithTwoChildren(left, right)  // 1
-      } else {
-        replacement = left           // 2
-      }
-    } else if let right = right {    // 3
-      replacement = right
+    // Replacement for current node can be either biggest one on the left or
+    // smallest one on the right, whichever is not nil
+    if let right = right {
+      replacement = right.minimum()
+    } else if let left = left {
+      replacement = left.maximum()
     } else {
-      replacement = nil              // 4
+      replacement = nil
     }
-    
-    reconnectParentToNode(replacement)
 
+    replacement?.remove()
+
+    // Place the replacement on current node's position
+    replacement?.right = right
+    replacement?.left = left
+    right?.parent = replacement
+    left?.parent = replacement
+    reconnectParentTo(node:replacement)
+
+    // The current node is no longer part of the tree, so clean it up.
     parent = nil
     left = nil
     right = nil
@@ -1012,7 +1021,7 @@ if let node1 = tree.search(1) {
 <!--
 ## The code (solution 2)
 
-We've implemented the binary tree node as a class but you can also use an enum. 
+We've implemented the binary tree node as a class but you can also use an enum.
 
 The difference is reference semantics versus value semantics. Making a change to the class-based tree will update that same instance in memory. But the enum-based tree is immutable -- any insertions or deletions will give you an entirely new copy of the tree. Which one is best totally depends on what you want to use it for.
 
@@ -1038,6 +1047,7 @@ public enum BinarySearchTree<T: Comparable> {
 
 <!--
 The enum has three cases: 
+
 
 - `Empty` to mark the end of a branch (the class-based version used `nil` references for this).
 - `Leaf` for a leaf node that has no children.
@@ -1066,7 +1076,7 @@ As usual, we'll implement most functionality recursively. We'll treat each case 
     case let .Node(left, _, right): return left.count + 1 + right.count
     }
   }
-  
+
   public var height: Int {
     switch self {
     case .Empty: return 0
@@ -1086,7 +1096,7 @@ Inserting new nodes looks like this:
     switch self {
     case .Empty:
       return .Leaf(newValue)
-      
+
     case .Leaf(let value):
       if newValue < value {
         return .Node(.Leaf(newValue), value, .Empty)

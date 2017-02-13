@@ -236,31 +236,31 @@ in this new algorithm for both forward and backward traversals:
 因為有追蹤前驅 和/或 後繼節點, 對於引線二元樹的中序走訪比上面一開始說的方法還要有效率. 使用 前驅 / 後繼屬性對於此演算法的走訪有很大的影響:
 
 ```swift
-func traverseInOrderForward(visit: T -> Void) {
-  var n: ThreadedBinaryTree
-  n = minimum()
-  while true {
-    visit(n.value)
-    if let successor = n.successor() {
-      n = successor
-    } else {
-      break
+    public func traverseInOrderForward(_ visit: (T) -> Void) {
+        var n: ThreadedBinaryTree
+        n = minimum()
+        while true {
+            visit(n.value)
+            if let successor = n.successor() {
+                n = successor
+            } else {
+                break
+            }
+        }
     }
-  }
-}
 
-func traverseInOrderBackward(visit: T -> Void) {
-  var n: ThreadedBinaryTree
-  n = maximum()
-  while true {
-    visit(n.value)
-    if let predecessor = n.predecessor() {
-      n = predecessor
-    } else {
-      break
+    public func traverseInOrderBackward(_ visit: (T) -> Void) {
+        var n: ThreadedBinaryTree
+        n = maximum()
+        while true {
+            visit(n.value)
+            if let predecessor = n.predecessor() {
+                n = predecessor
+            } else {
+                break
+            }
+        }
     }
-  }
-}
 ```
 
 <!--
@@ -310,7 +310,7 @@ continuously manage the `leftThread` and `rightThread` variables.  Rather than
 walking through some boring code, it is best to explain this with an example
 (although you can read through [the implementation](ThreadedBinaryTree.swift)
 if you want to know the finer details).  Please note that this requires
-knowledge of binary search trees, so make sure you have 
+knowledge of binary search trees, so make sure you have
 [read this first](../Binary Search Tree/).
 
 > Note: we do allow duplicate nodes in this implementation of a threaded binary
@@ -497,6 +497,7 @@ find [further documentation here](../Binary Search Tree/).
 引線二元樹還可以辦到一些其他的小操作, 像是 `searching()` 節點, 找到節點的 `depth()` 或 `height()`... 等等. 都可以在 [實作](ThreadedBinaryTree.swift) 中找到這些技巧的詳細.
 這些方法有大部分是繼承自二元搜尋樹, 詳細可以參考 [這裡](../Binary Search Tree/).
 
+
 <!--
 ## See also 
 -->
@@ -507,5 +508,6 @@ find [further documentation here](../Binary Search Tree/).
 
 *Written for the Swift Algorithm Club by
 [Jayson Tung](https://github.com/JFTung)*
+*Migrated to Swift 3 by Jaap Wijnen*
 
 *Images made using www.draw.io*

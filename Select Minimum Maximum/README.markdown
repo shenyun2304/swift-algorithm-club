@@ -53,7 +53,8 @@ Here is a simple implementation in Swift:
 Swift 中的實作:
 
 ```swift
-func minimum<T: Comparable>(var array: [T]) -> T? {
+func minimum<T: Comparable>(_ array: [T]) -> T? {
+  var array = array
   guard !array.isEmpty else {
     return nil
   }
@@ -65,7 +66,8 @@ func minimum<T: Comparable>(var array: [T]) -> T? {
   return minimum
 }
 
-func maximum<T: Comparable>(var array: [T]) -> T? {
+func maximum<T: Comparable>(_ array: [T]) -> T? {
+  var array = array
   guard !array.isEmpty else {
     return nil
   }
@@ -158,7 +160,8 @@ Here is a simple implementation in Swift:
 
 
 ```swift
-func minimumMaximum<T: Comparable>(var array: [T]) -> (minimum: T, maximum: T)? {
+func minimumMaximum<T: Comparable>(_ array: [T]) -> (minimum: T, maximum: T)? {
+  var array = array
   guard !array.isEmpty else {
     return nil
   }
