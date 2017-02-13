@@ -13,7 +13,7 @@ If you're a computer science student who needs to learn this stuff for exams -- 
 
 The goal of this project is to **explain how algorithms work**. The focus is on clarity and readability of the code, not on making a reusable library that you can drop into your own projects. That said, most of the code should be ready for production use but you may need to tweak it to fit into your own codebase.
 
-All code is compatible with **Xcode 7.3** and **Swift 2.2**. We'll keep this updated with the latest version of Swift.
+Most code is compatible with **Xcode 8.2** and **Swift 3**. We'll keep this updated with the latest version of Swift.
 
 This is a work in progress. More algorithms will be added soon. :-)
 
@@ -108,21 +108,25 @@ If you're new to algorithms and data structures, here are a few good ones to sta
 
 - [線性搜尋](Linear Search/). 在陣列中找到元素.
 - [二元搜尋](Binary Search/). 在排序過的陣列中快速找到元素.
-- [*發生次數](Count Occurrences/). 計算某個值在陣列中出現幾次.
+- [發生次數](Count Occurrences/). 計算某個值在陣列中出現幾次.
 - [選取 最小值 / 最大值](Select Minimum Maximum). 找到陣列中的最小值/最大值.
 - [第K大的值](Kth Largest Element/). 在陣列中，找到第 *k* 大的元素，例如中位數.
-- [*選擇採樣](Selection Sampling/). 隨機在集合中選取一堆元素.
-- [*聯集查找](Union-Find/). 追蹤沒交集的集合，並快速合併它們.
+- [選擇採樣](Selection Sampling/). 隨機在集合中選取一堆元素.
+- [聯集查找](Union-Find/). 追蹤沒交集的集合，並快速合併它們.
+- [Z-Algorithm](Z-Algorithm/). 在給定字串中找到符合搜尋字串, 並回傳所有符合字串的起始索引.
 
 <!--
-### String Search 
+### String Search
 
 - [Brute-Force String Search](Brute-Force String Search/). A naive method.
 - [Boyer-Moore](Boyer-Moore/). A fast method to search for substrings. It skips ahead based on a look-up table, to avoid looking at every character in the text.
 - Knuth-Morris-Pratt
-- Rabin-Karp
+- [Rabin-Karp](Rabin-Karp/)  Faster search by using hashing.
 - [Longest Common Subsequence](Longest Common Subsequence/). Find the longest sequence of characters that appear in the same order in both strings.
+- [Z-Algorithm](Z-Algorithm/). Finds all instances of a pattern in a String, and returns the indexes of where the pattern starts within the String.
+
 -->
+
 
 ### 字串搜尋
 
@@ -130,7 +134,7 @@ If you're new to algorithms and data structures, here are a few good ones to sta
 - [Boyer-Moore](Boyer-Moore/). 一個快速搜尋子字串的方法. 為了避免走訪每個字元，根據查表來跳過某些的部分. 
 - Knuth-Morris-Pratt
 - Rabin-Karp
-- [*最長共同子字串](Longest Common Subsequence/). 找到兩個字串中相同部分最長的子字串.
+- [最長共同子字串](Longest Common Subsequence/). 找到兩個字串中相同部分最長的子字串.
 
 <!--
 ### Sorting
@@ -291,6 +295,8 @@ Most of the time using just the built-in `Array`, `Dictionary`, and `Set` types 
 - [Bit Set](Bit Set/). A fixed-size sequence of *n* bits.
 - [Fixed Size Array](Fixed Size Array/). When you know beforehand how large your data will be, it might be more efficient to use an old-fashioned array with a fixed size.
 - [Ordered Array](Ordered Array/). An array that is always sorted.
+- [Rootish Array Stack](Rootish Array Stack/). A space and time efficient variation on Swift arrays.
+
 -->
 
 ### 陣列的變化
@@ -299,6 +305,7 @@ Most of the time using just the built-in `Array`, `Dictionary`, and `Set` types 
 - [位元集](Bit Set/). 含有 *n* 個位元的序列.
 - [固定長度陣列](Fixed Size Array/). 如果可以確定資料量大小，那使用傳統的固定長度陣列會具有更高的效能.
 - [有序陣列](Ordered Array/). 一個已經排序過的陣列.
+- [Rootish Array Stack](Rootish Array Stack/). 在空間和時間上優化的 Swift 陣列.
 
 <!--
 ### Queues
@@ -322,7 +329,7 @@ Most of the time using just the built-in `Array`, `Dictionary`, and `Set` types 
 ### Lists
 
 - [Linked List](Linked List/). A sequence of data items connected through links. Covers both singly and doubly linked lists.
-<<<<<<< HEAD
+
 - [Skip-List](Skip-List/). Skip List is a probablistic data-structure with same logarithmic time bound and efficiency as AVL/ or Red-Black tree and provides a clever compromise to efficiently support search and update operations.
 -->
 
@@ -424,17 +431,19 @@ A lot of software developer interview questions consist of algorithmic puzzles. 
 - [Fizz Buzz](Fizz Buzz/)
 - [Monty Hall Problem](Monty Hall Problem/)
 - [Finding Palindromes](Palindromes/)
+- [Dining Philosophers](DiningPhilosophers/)
 -->
 
 ## 動腦時間
 
 許多軟體開發者在面試時都會被問到一些演算法的問題，這裡只收集了一些有趣的題目，想瞭解更多這類的問題 (及答案)，請瀏覽 [這裡](http://elementsofprogramminginterviews.com/) 和 [這裡](http://www.crackingthecodinginterview.com).
 
+
 - [雙和問題](Two-Sum Problem/)
 - [Fizz Buzz](Fizz Buzz/)
 - [蒙提霍爾問題](Monty Hall Problem/)
 - [尋找迴文](Palindromes/)
-
+- [Dining Philosophers](DiningPhilosophers/)
 
 <!--
 ## Learn more!
@@ -445,6 +454,7 @@ For more information, check out these great books:
 - [The Algorithm Design Manual](http://www.algorist.com) by Skiena
 - [Elements of Programming Interviews](http://elementsofprogramminginterviews.com) by Aziz, Lee, Prakash
 - [Algorithms](http://www.cs.princeton.edu/~rs/) by Sedgewick
+- [Grokking Algorithms](https://www.manning.com/books/grokking-algorithms) by Aditya Bhargava 
 
 The following books are available for free online:
 
@@ -452,6 +462,7 @@ The following books are available for free online:
 - [Algorithms, Etc.](http://jeffe.cs.illinois.edu/teaching/algorithms/) by Erickson
 - [Algorithms + Data Structures = Programs](http://www.ethoberon.ethz.ch/WirthPubl/AD.pdf) by Wirth
 - Algorithms and Data Structures: The Basic Toolbox by Mehlhorn and Sanders
+- [Open Data Structures](http://opendatastructures.org) by Pat Morin
 - [Wikibooks: Algorithms and Implementations](https://en.wikibooks.org/wiki/Algorithm_Implementation)
 
 Other algorithm repositories:
@@ -493,7 +504,7 @@ Other algorithm repositories:
 
 The Swift Algorithm Club was originally created by [Matthijs Hollemans](https://github.com/hollance).
 
-It is now maintained by [Chris Pilcher](https://github.com/chris-pilcher) and [Kelvin Lau](https://github.com/kelvinlauKL).
+It is now maintained by [Vincent Ngo](https://www.raywenderlich.com/u/jomoka) and [Kelvin Lau](https://github.com/kelvinlauKL).
 
 The Swift Algorithm Club is a collaborative effort from the [most algorithmic members](https://github.com/rwenderlich/swift-algorithm-club/graphs/contributors) of the [raywenderlich.com](https://www.raywenderlich.com) community. We're always looking for help - why not [join the club](How to Contribute.markdown)? :]
 -->
@@ -509,10 +520,13 @@ Swift 演算法社團是由 [raywenderlich.com](https://www.raywenderlich.com) �
 
 All content is licensed under the terms of the MIT open source license.
 
+
 -->
 ## 許可證
 
 本專案包含 [原專案](https://github.com/raywenderlich/swift-algorithm-club) 都是基於 MIT 協議，請隨意使用!
+
+By posting here, or by submitting any pull request through this forum, you agree that all content you submit or create, both code and text, is subject to this license.  Razeware, LLC, and others will have all the rights described in the license regarding this content.  The precise terms of this license may be found [here](https://github.com/raywenderlich/swift-algorithm-club/blob/master/LICENSE.txt).
 
 
 [![Build Status](https://travis-ci.org/raywenderlich/swift-algorithm-club.svg?branch=master)](https://travis-ci.org/raywenderlich/swift-algorithm-club)

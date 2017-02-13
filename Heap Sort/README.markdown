@@ -93,13 +93,13 @@ Here's how you can implement heap sort in Swift:
 
 ```swift
 extension Heap {
-  public mutating func sort() -> [T] {
-    for i in (elements.count - 1).stride(through: 1, by: -1) {
-      swap(&elements[0], &elements[i])
-      shiftDown(index: 0, heapSize: i)
-    }
+    public mutating func sort() -> [T] {
+        for i in stride(from: (elements.count - 1), through: 1, by: -1) {
+            swap(&elements[0], &elements[i])
+            shiftDown(0, heapSize: i)
+        }
     return elements
-  }
+    }
 }
 ```
 
@@ -125,10 +125,10 @@ We can write a handy helper function for that:
 我們可以寫個好用的函式來辦到:
 
 ```swift
-public func heapsort<T>(a: [T], _ sort: (T, T) -> Bool) -> [T] {
-  let reverseOrder = { i1, i2 in sort(i2, i1) }
-  var h = Heap(array: a, sort: reverseOrder)
-  return h.sort()
+public func heapsort<T>(_ a: [T], _ sort: @escaping (T, T) -> Bool) -> [T] {
+    let reverseOrder = { i1, i2 in sort(i2, i1) }
+    var h = Heap(array: a, sort: reverseOrder)
+    return h.sort()
 }
 ```
 

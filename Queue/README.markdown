@@ -263,7 +263,11 @@ public struct Queue<T> {
   }
   
   public var front: T? {
-    return array.first
+    if isEmpty {
+      return nil
+    } else {
+      return array[head]
+    }
   }
 }
 ```
